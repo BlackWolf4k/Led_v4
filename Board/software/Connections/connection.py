@@ -11,7 +11,7 @@ wlan = 0
 def init():
 	global wlan
 
-	# Initialize the vlan
+	# Initialize the wlan
 	wlan = network.WLAN( network.STA_IF )
 	wlan.active( True )
 

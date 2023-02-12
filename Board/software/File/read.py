@@ -1,3 +1,5 @@
+import json
+
 # Read a file
 # ARGUMENTS ( str ):
 #	-filename: the name of the file to read
@@ -17,4 +19,28 @@ def read_file( filename ):
 		return 0
 	
 	# Return the file content
+	return content
+
+# Read a file
+# ARGUMENTS ( str ):
+#	-filename: the name of the config file to read
+# RETURN ( dict ):
+#	-dict: json
+#	-0: error code
+def read_conf_file( filename ):
+	file = 0
+
+	# Open the file
+	try:
+		file = open( "Config/" + filename, "r" ) # Check this
+	except: # No file found
+		return 0
+
+	# Read the json
+	content = json.load( file )
+
+	# Close the file
+	file.close()
+
+	# Return the json
 	return content

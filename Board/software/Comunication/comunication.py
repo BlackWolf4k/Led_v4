@@ -1,9 +1,6 @@
 import urequests
 import socket
 
-# Broadcast port
-from Config import shared.shared
-
 # Send a get request
 # ARGUMENTS ( str, dict ):
 #	-url: the url where to send the get request
