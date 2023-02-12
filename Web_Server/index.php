@@ -19,6 +19,7 @@
 		</head>
 		<body>
 			<div>
+				<?php echo $_SERVER["REQUEST_URI"]; ?>
 				<a href = "./sign/signin.php" >Sign In</a>
 				<a href = "./sign/signup.php" >Sign Up</a>
 			</div>
