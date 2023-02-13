@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 09, 2023 at 05:36 PM
+-- Generation Time: Feb 13, 2023 at 06:57 AM
 -- Server version: 10.9.4-MariaDB
 -- PHP Version: 8.2.1
 
@@ -31,8 +31,19 @@ CREATE TABLE `animation` (
   `id` int(11) NOT NULL,
   `id_pattern` int(11) NOT NULL,
   `id_playlist` int(11) NOT NULL,
-  `path` text NOT NULL
+  `leds_number` int(11) NOT NULL,
+  `phases` int(11) NOT NULL,
+  `delay` int(3) NOT NULL,
+  `repeat` int(3) NOT NULL,
+  `file_name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `animation`
+--
+
+INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `leds_number`, `phases`, `delay`, `repeat`, `file_name`) VALUES
+(1, 1, 1, 10, 10, 10, 255, 'test.dat');
 
 -- --------------------------------------------------------
 
@@ -42,9 +53,15 @@ CREATE TABLE `animation` (
 
 CREATE TABLE `board` (
   `id` int(11) NOT NULL,
-  `number_of_leds` int(5) NOT NULL,
-  `offline_animation` int(11) NOT NULL
+  `number_of_leds` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the boards shared informations';
+
+--
+-- Dumping data for table `board`
+--
+
+INSERT INTO `board` (`id`, `number_of_leds`) VALUES
+(1, 10);
 
 -- --------------------------------------------------------
 
@@ -56,6 +73,13 @@ CREATE TABLE `cluster` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the groups';
+
+--
+-- Dumping data for table `cluster`
+--
+
+INSERT INTO `cluster` (`id`, `name`) VALUES
+(1, 'Home');
 
 -- --------------------------------------------------------
 
@@ -72,6 +96,13 @@ CREATE TABLE `light` (
   `id_sub_playlist` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the informations about a light';
 
+--
+-- Dumping data for table `light`
+--
+
+INSERT INTO `light` (`id`, `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES
+(3, 1, 'Bed', 1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -82,6 +113,13 @@ CREATE TABLE `pattern` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the possible patterns of the animations';
+
+--
+-- Dumping data for table `pattern`
+--
+
+INSERT INTO `pattern` (`id`, `name`) VALUES
+(1, 'Standard');
 
 -- --------------------------------------------------------
 
@@ -95,6 +133,13 @@ CREATE TABLE `playlist` (
   `id_cluster` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the informations about a playlist';
 
+--
+-- Dumping data for table `playlist`
+--
+
+INSERT INTO `playlist` (`id`, `name`, `id_cluster`) VALUES
+(1, 'Home_Animations', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -105,6 +150,13 @@ CREATE TABLE `relation_animation_sub_playlist` (
   `id_animation` int(11) NOT NULL,
   `id_sub_playlist` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Relationates the animations with a sub playlist';
+
+--
+-- Dumping data for table `relation_animation_sub_playlist`
+--
+
+INSERT INTO `relation_animation_sub_playlist` (`id_animation`, `id_sub_playlist`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -128,6 +180,13 @@ CREATE TABLE `sub_playlist` (
   `name` varchar(255) NOT NULL,
   `id_playlist` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the informations about a sub playlist';
+
+--
+-- Dumping data for table `sub_playlist`
+--
+
+INSERT INTO `sub_playlist` (`id`, `name`, `id_playlist`) VALUES
+(1, 'BedRoom Animations', 1);
 
 -- --------------------------------------------------------
 
@@ -225,37 +284,43 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `animation`
 --
 ALTER TABLE `animation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `board`
 --
 ALTER TABLE `board`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cluster`
 --
 ALTER TABLE `cluster`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `light`
+--
+ALTER TABLE `light`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `pattern`
 --
 ALTER TABLE `pattern`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `playlist`
 --
 ALTER TABLE `playlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sub_playlist`
 --
 ALTER TABLE `sub_playlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
