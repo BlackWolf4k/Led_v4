@@ -9,3 +9,4 @@ ampy -p /dev/ttyACM0 put Led
 ampy -p /dev/ttyACM0 put Server
 ampy -p /dev/ttyACM0 put Services
 ampy -p /dev/ttyACM0 put Config
+ampy -p /dev/ttyACM0 put main.py

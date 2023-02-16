@@ -2,12 +2,14 @@
 import _thread
 
 # Import needed libraries
-from Connections import connection
+#from Connections import connection
+import Animations.animation as animation
 
 # Main function
 if __name__ == "__main__":
 	# Connect to the wifi
-	status = connection.connect()
+	#status = connection.connect()
+	print( animation.get_animation() )
 
 	# If connection fails play offline animation
 	#if ( status == 0 )

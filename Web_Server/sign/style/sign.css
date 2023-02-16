@@ -6,12 +6,14 @@
 
 .signin_body
 {
-	background-image: url( "../images/signin_image.jpg" );
+	/*background-image: url( "../images/signin_image.jpg" );*/
+	background-image: linear-gradient( to right, rgb(255, 0, 255) , rgb(64, 0, 255) );
 }
 
 .signup_body
 {
-	background-image: url( "../images/signup_image.jpg" );
+	/*background-image: url( "../images/signup_image.jpg" );*/
+	background-image: linear-gradient( to right, rgb(255, 0, 255) , rgb(64, 0, 255) );
 }
 
 .sign
@@ -57,4 +59,9 @@
 .question_link
 {
 	text-decoration: none;
+}
+
+.error
+{
+	color: red;
 }

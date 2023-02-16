@@ -7,13 +7,32 @@
 	<body class = "signup_body" >
 		<div class = "sign" >
 		<a class = "sign_title">Sign In</a><br>
+		<?php
+		if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 0 )
+			echo "<a class = 'error'>Plase fill all the fields</a><br><br>";
+		?>
 			<form action = "sign.php" method = "post" class = "sign_form" >
 				<a>Email</a><br>
 				<input type = "text" name = "email" class = "sign_input" ><br><br>
+				<?php
+				if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 2 )
+					echo "<a class = 'error'>Email already used</a><br><br>";
+				?>
+
 				<a>Username</a><br>
 				<input type = "text" name = "username" class = "sign_input" ><br><br>
+				<?php
+				if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 3 )
+					echo "<a class = 'error'>Username already taken</a><br><br>";
+				?>
+
 				<a>Password</a><br>
 				<input type = "password" name = "password" class = "sign_input" ><br><br>
+				<?php
+				if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 1 )
+					echo "<a class = 'error'>Passwords are not the same</a><br><br>";
+				?>
+
 				<a>Confirm Password</a><br>
 				<input type = "password" name = "password_confirm" class = "sign_input" ><br><br>
 				<input type = "submit" value = "Sign Up" class = "sign_button" ><br>

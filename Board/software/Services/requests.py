@@ -16,7 +16,12 @@ def board_server():
 	board_config = read.read_conf_file( "board.json" )
 
 	# Make the request
-	response = comunication.get( server_config[ "protocol"] + server_config[ "dns" ] + ":" + server_config[ "port" ],
+	response = comunication.get( server_config[ "protocol"] + server_config[ "dns" ] + ":" + str( server_config[ "port" ] ) + server_config[ "path" ],
 					  { "board_id": board_config[ "board_id" ], "code": 0x0001 } )
 
-	return response
+	# Check the response
+	if response.status_code != 200:
+		return 0 # There was an error
+
+	# Return the response content
+	return response.content

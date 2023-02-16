@@ -26,7 +26,7 @@ def connect():
 	file_content = file_read( "Config/wifi.conf" )
 
 	# Check that the opening was sucessful
-	if ( file_content == 0 )
+	if ( file_content == 0 ):
 		return 0
 
 	content = content.split( ":" )
@@ -35,13 +35,13 @@ def connect():
 	wlan.connect( content[0], content[1] )
 
 	# Check if connected
-	if ( wlan.isconnected() == False )
+	if ( wlan.isconnected() == False ):
 		return 0 # Not connected
-	else
+	else:
 		return 1 # Connected
 
 # Disconnect from the wifi
-def disconnect()
+def disconnect():
 	global wlan
 	
 	# Disconnect

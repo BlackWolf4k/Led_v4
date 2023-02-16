@@ -1,4 +1,5 @@
-import urequests
+#import urequests
+import requests as urequests
 import socket
 
 # Send a get request
@@ -12,12 +13,8 @@ def get( url, content ):
 	# Send the request
 	response = urequests.get( url, params = content )
 
-	# Check the response
-	if response.status_code != 200:
-		return 0
-
 	# Return the result
-	return response.content
+	return response
 
 # Send a post request
 # ARGUMENTS ( str, dict ):
@@ -30,12 +27,8 @@ def post( url, content ):
 	# Send the request
 	response = urequests.post( url, json = content )
 
-	# Check the response
-	if response.status_code != 200:
-		return 0
-
 	# Return the result
-	return response.content
+	return response
 
 # Send a message to the whole network
 # ARGUMENTS ( any ):

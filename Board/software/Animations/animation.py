@@ -1,5 +1,5 @@
 # Decode the animation
-import animation_decode
+import Animations.animation_decode as animation_decode
 
 # Make the get request
 from Services import requests
@@ -11,12 +11,12 @@ from Services import requests
 #	-dict: the animation
 def get_animation():
 	# Require the new animation
-	requests.board_server()
+	response = requests.board_server()
 
 	# Check the returned value
-	if ( response.content == b'{}' ):
+	if ( response == b'{}' ):
 		# Return an error code
 		return 0
 	else:
 		# Return the decode recived content
-		return decode_animation( response.content )
+		return animation_decode.decode_animation( response )
