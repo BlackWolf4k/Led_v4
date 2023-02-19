@@ -1,7 +1,7 @@
 <?php
 	// Connects to the database
 	$user_name = "sleds";
-	$server_name = "localhost";
+	$server_name = "127.0.0.1";
 	$password = "sleds";
 	$database_name = "sleds";
 

@@ -111,8 +111,8 @@
 		$animation -> animation_descriptor = $animation_descriptor;
 
 		// Change light actual animation id
-		$statement = $sleds_database -> prepare( "UPDATE light SET id_animation=?" );
-		$statement -> bind_param( "i", $next_animation_id );
+		$statement = $sleds_database -> prepare( "UPDATE light SET id_animation=? WHERE id_board=?" );
+		$statement -> bind_param( "ii", $next_animation_id, $_GET[ "board_id" ] );
 		$statement -> execute();
 
 		// Read the animation path
@@ -134,6 +134,7 @@
 		{
 			// Return an error code
 			echo "{}";
+			die();
 		}
 
 		// Return the json containing the response

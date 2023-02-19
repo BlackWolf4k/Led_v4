@@ -1,7 +1,18 @@
 <?php
-// SELECT * FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN cluster ON light.id_cluster=cluster.id RIGHT JOIN sub_playlist ON light.id_sub_playlist = sub_playlist.id;
+	session_save_path( "/var/www/sessions" ); // remove this in other servers
+	session_start();
+
+	// SELECT DISTINCT * FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN cluster ON light.id_cluster=cluster.id RIGHT JOIN sub_playlist ON light.id_sub_playlist = sub_playlist.id;
+	// Check if user is signed in
 	if ( !isset( $_SESSION[ "user_id" ] ) )
 	{
+		// Send user to sign in page
+		header( "Location: /sign/signin.php" );
+		die();
+	}
+	else // User is signed in
+	{
+		include "../connection/sleds_connect.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,37 +22,45 @@
 	<body>
 		<?php
 		// Get all the groups of the user
-		// $statement = $sleds_database -> prepare( "SELECT id, name FROM cluster LEFT JOIN user ON cluster.id=?.id" );
-		// $statement -> bind_param( "s", $token );
-		// $statement -> execute();
+		$statement = $sleds_database -> prepare( "SELECT * FROM cluster RIGHT JOIN relation_user_cluster ON cluster.id=relation_user_cluster.id_cluster WHERE relation_user_cluster.id_user=?" );
+		$statement -> bind_param( "i", $_SESSION[ "user_id" ] );
+		$statement -> execute();
+		$group_result = $statement -> get_result();
+
+		// Print the table
+		echo '
+		<table class = "table table-hover" >
+			<thead>
+				<tr>
+					<th scope = "col" >Name</th>
+					<th scope = "col" >Group</th>
+					<th scope = "col" >Animation</th>
+					<th scope = "col" >Playlist</th>
+					<th scope = "col" >Leds</th>
+				</tr>
+			</thead>
+			<tbody>
+		';
 
 		// Print all the groups
 		while ( $group = $group_result -> fetch_assoc() )
 		{
-			// Print the table
-			echo '
-			<table class = "table table-hover" >
-				<thead>
-					<tr>
-						<th scope = "col" >Name</th>
-						<th scope = "col" >Group</th>
-						<th scope = "col" >Animation</th>
-						<th scope = "col" >Playlist</th>
-						<th scope = "col" >Leds</th>
-					</tr>
-				</thead>
-				<tbody>
-			';
+			// Get the lights of one group
+			$statement = $sleds_database -> prepare( "SELECT DISTINCT * FROM light RIGHT JOIN board ON light.id_board=board.id WHERE light.id_cluster=?" );
+			$statement -> bind_param( "i", $group[ "id" ] );
+			$statement -> execute();
+			$light_result = $statement -> get_result();
 
-				// Select all the lights and boards of a group
+				// Print all the lights and boards of a group
 				while ( $light = $light_result -> fetch_assoc() )
 				{
 					echo '
 					<tr>
-						<th scope = "row" ></th>
-						<td></td>
-						<td></td>
-						<td></td>
+						<th scope = "row" >' . $light[ "name" ] . '</th>
+						<td>' . $group[ "name" ] . '</td>
+						<td>' . $light[ "id_animation" ] . '</td>
+						<td>' . $light[ "id_sub_playlist" ] . '</td>
+						<td>' . $light[ "leds_number" ] . '</td>
 					</tr>
 					';
 				}

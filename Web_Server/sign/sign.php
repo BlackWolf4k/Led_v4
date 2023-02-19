@@ -1,4 +1,5 @@
 <?php
+	session_save_path( "/var/www/sessions" ); // remove this in other servers
 	session_start();
 
 	// Check that hidden value is present
@@ -82,9 +83,9 @@
 		}
 
 		// Check the user credentialities
-		$statement = $sleds_database -> prepare( "SELECT id FROM user WHERE username=? OR password=?" );
+		$statement = $sleds_database -> prepare( "SELECT id, password FROM user WHERE username=?" );
 		$password = password_hash( $_POST[ "password" ], PASSWORD_DEFAULT );
-		$statement -> bind_param( "ss", $_POST[ "username" ], $password );
+		$statement -> bind_param( "s", $_POST[ "username" ] );
 		$statement -> execute();
 		$result = $statement -> get_result();
 
@@ -95,12 +96,20 @@
 			die();
 		}
 
-		// Set the session user id
 		$result = $result -> fetch_assoc();
+
+		// Check the password
+		if ( !password_verify( $_POST[ "password" ], $result[ "password" ] ) )
+		{
+			header( "Location: ./signin.php?error=1" ); // Error code is the same as username not found
+			die();
+		}
+
+		// Set the session user id
 		$_SESSION[ "user_id" ] = $result[ "id" ];
 
 		// Go to the home page
-		header( "Location: ../home/home.php" );
+		header( "Location: /home/home.php" );
 		die();
 	}
 ?>
