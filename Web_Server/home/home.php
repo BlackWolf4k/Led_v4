@@ -46,7 +46,7 @@
 		while ( $group = $group_result -> fetch_assoc() )
 		{
 			// Get the lights of one group
-			$statement = $sleds_database -> prepare( "SELECT DISTINCT * FROM light RIGHT JOIN board ON light.id_board=board.id WHERE light.id_cluster=?" );
+			$statement = $sleds_database -> prepare( "SELECT DISTINCT light.*, sub_playlist.name AS sub_playlist_name FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN sub_playlist ON light.id_sub_playlist=sub_playlist.id WHERE light.id_cluster=?" );
 			$statement -> bind_param( "i", $group[ "id" ] );
 			$statement -> execute();
 			$light_result = $statement -> get_result();
@@ -59,7 +59,7 @@
 						<th scope = "row" >' . $light[ "name" ] . '</th>
 						<td>' . $group[ "name" ] . '</td>
 						<td>' . $light[ "id_animation" ] . '</td>
-						<td>' . $light[ "id_sub_playlist" ] . '</td>
+						<td>' . $light[ "sub_playlist_name" ] . '</td>
 						<td>' . $light[ "leds_number" ] . '</td>
 					</tr>
 					';

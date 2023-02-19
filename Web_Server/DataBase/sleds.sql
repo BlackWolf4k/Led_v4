@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.0.4deb2+deb11u1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Feb 13, 2023 at 06:57 AM
--- Server version: 10.9.4-MariaDB
--- PHP Version: 8.2.1
+-- Host: localhost:3306
+-- Generation Time: Feb 19, 2023 at 05:42 PM
+-- Server version: 10.5.18-MariaDB-0+deb11u1
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,7 +43,9 @@ CREATE TABLE `animation` (
 --
 
 INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `leds_number`, `phases`, `delay`, `repeat`, `file_name`) VALUES
-(1, 1, 1, 10, 10, 10, 255, 'test.dat');
+(1, 1, 1, 10, 10, 10, 255, 'test.dat'),
+(2, 1, 1, 20, 20, 20, 255, 'test.dat'),
+(3, 1, 1, 30, 30, 30, 255, 'test.dat');
 
 -- --------------------------------------------------------
 
@@ -53,15 +55,16 @@ INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `leds_number`, `phas
 
 CREATE TABLE `board` (
   `id` int(11) NOT NULL,
-  `number_of_leds` int(5) NOT NULL
+  `leds_number` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the boards shared informations';
 
 --
 -- Dumping data for table `board`
 --
 
-INSERT INTO `board` (`id`, `number_of_leds`) VALUES
-(1, 10);
+INSERT INTO `board` (`id`, `leds_number`) VALUES
+(1, 10),
+(2, 20);
 
 -- --------------------------------------------------------
 
@@ -101,7 +104,8 @@ CREATE TABLE `light` (
 --
 
 INSERT INTO `light` (`id`, `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES
-(3, 1, 'Bed', 1, 1, 1);
+(3, 1, 'Bed', 1, 3, 1),
+(4, 2, 'Desk', 1, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -156,7 +160,11 @@ CREATE TABLE `relation_animation_sub_playlist` (
 --
 
 INSERT INTO `relation_animation_sub_playlist` (`id_animation`, `id_sub_playlist`) VALUES
-(1, 1);
+(1, 1),
+(2, 1),
+(3, 1),
+(2, 2),
+(3, 2);
 
 -- --------------------------------------------------------
 
@@ -168,6 +176,13 @@ CREATE TABLE `relation_user_cluster` (
   `id_user` int(11) NOT NULL,
   `id_cluster` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Relationates the users and the clusters';
+
+--
+-- Dumping data for table `relation_user_cluster`
+--
+
+INSERT INTO `relation_user_cluster` (`id_user`, `id_cluster`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -186,7 +201,8 @@ CREATE TABLE `sub_playlist` (
 --
 
 INSERT INTO `sub_playlist` (`id`, `name`, `id_playlist`) VALUES
-(1, 'BedRoom Animations', 1);
+(1, 'BedRoom Animations', 1),
+(2, 'WorkRoom', 1);
 
 -- --------------------------------------------------------
 
@@ -196,11 +212,19 @@ INSERT INTO `sub_playlist` (`id`, `name`, `id_playlist`) VALUES
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `email` int(11) NOT NULL,
-  `username` int(11) NOT NULL,
-  `password` int(11) NOT NULL,
-  `token` int(11) NOT NULL
+  `email` varchar(30) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `token` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the informations of a user';
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `email`, `username`, `password`, `token`) VALUES
+(1, 'admin@sleds.com', 'admin', '$2y$10$ha7GMP1Co8HdJHeGKsDUJ.Ap8W6pA8hsT5jILQaDB7C5hbSlAgCke', NULL),
+(2, 'creator@sleds.com', 'creator', '$2y$10$.hxJYshh.rAYHOWDcc6lK.i6MvSQOQo7I08iDO5tYWstbKreCCgHW', NULL);
 
 --
 -- Indexes for dumped tables
@@ -284,13 +308,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `animation`
 --
 ALTER TABLE `animation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `board`
 --
 ALTER TABLE `board`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cluster`
@@ -302,7 +326,7 @@ ALTER TABLE `cluster`
 -- AUTO_INCREMENT for table `light`
 --
 ALTER TABLE `light`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pattern`
@@ -320,13 +344,13 @@ ALTER TABLE `playlist`
 -- AUTO_INCREMENT for table `sub_playlist`
 --
 ALTER TABLE `sub_playlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
