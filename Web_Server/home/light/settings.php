@@ -20,12 +20,6 @@
 		// Connect to the database
 		include "../../connection/sleds_connect.php";
 
-		// SubPlaylists
-		/*$statement = $sleds_database -> prepare( "" );
-		$statement -> bind_param();
-		$statement -> execute();
-		$sub_playlist_result = $statement -> get_result();*/
-
 		// Get light and board informations
 		$statement = $sleds_database -> prepare( "SELECT * FROM light RIGHT JOIN board ON light.id_board=board.id WHERE light.id=?" );
 		$statement -> bind_param( "i", $_GET[ "light_id" ] );
@@ -45,6 +39,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel = "shortcut icon" href = "/sleds_favicon.ico" type = "image/x-icon" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel = "stylesheet" href = "./style/style.css" >
 		<script src = "./script/ajax_script.js"></script> 
@@ -80,11 +75,22 @@
 				</div>
 				<div class="form-outline mb-4">
 					<label class="form-label" for="playlist">Playlist</label>
-					<select type="number" id="playlist" class="form-control" value = "<?php?>">
+					<select type="number" id="playlist" class="form-control">
+					</select>
+				</div>
+				<div class="form-outline mb-4">
+					<label class="form-label" for="actual_animation">Actual Animation ( to do )</label>
+					<select type="number" id="actual_animation" class="form-control" value = "">
+					</select>
+				</div>
+				<div class="form-outline mb-4">
+					<label class="form-label" for="actual_animation">Offline Animation ( to do )</label>
+					<select type="number" id="actual_animation" class="form-control" value = "">
 					</select>
 				</div>
 				<button type="submit" class="btn btn-primary btn-block mb-4">Change</button>
 			</form>
+			<a href = "/home/home.php" ><button class="btn btn-primary btn-block mb-4" >Discard</button></a>
 		</div>
 	</body>
 </html>

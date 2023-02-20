@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<link rel = "stylesheet" href = "./style/sign.css" >
-	</head>
-	<body>
+	<link rel = "shortcut icon" href = "/sleds_favicon.ico" type = "image/x-icon" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel = "stylesheet" href = "./style/sign.css" >
+</head>
+<body>
 <section class="vh-100 bg-image signup_body">
 	<div class="mask d-flex align-items-center h-100 gradient-custom-3">
 		<div class="container h-100">

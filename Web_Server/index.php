@@ -15,7 +15,7 @@
 	<!DOCTYPE html>
 	<html>
 		<head>
-			<link rel = "shortcut icon" href = "../favicon.ico" type = "image/x-icon" />
+			<link rel = "shortcut icon" href = "../sleds_favicon.ico" type = "image/x-icon" />
 		</head>
 		<body>
 			<div>
