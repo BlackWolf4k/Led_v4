@@ -18,8 +18,12 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel = "stylesheet" href = "./style/style.css" >
 	</head>
 	<body>
+	<nav class="navbar navbar-dark bg-dark">
+	</nav>
+	<div class = "lights_table" >
 		<?php
 		// Get all the groups of the user
 		$statement = $sleds_database -> prepare( "SELECT * FROM cluster RIGHT JOIN relation_user_cluster ON cluster.id=relation_user_cluster.id_cluster WHERE relation_user_cluster.id_user=?" );
@@ -46,7 +50,7 @@
 		while ( $group = $group_result -> fetch_assoc() )
 		{
 			// Get the lights of one group
-			$statement = $sleds_database -> prepare( "SELECT DISTINCT light.*, sub_playlist.name AS sub_playlist_name FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN sub_playlist ON light.id_sub_playlist=sub_playlist.id WHERE light.id_cluster=?" );
+			$statement = $sleds_database -> prepare( "SELECT DISTINCT light.*, board.leds_number as board_leds_number, sub_playlist.name AS sub_playlist_name FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN sub_playlist ON light.id_sub_playlist=sub_playlist.id WHERE light.id_cluster=?" );
 			$statement -> bind_param( "i", $group[ "id" ] );
 			$statement -> execute();
 			$light_result = $statement -> get_result();
@@ -56,11 +60,11 @@
 				{
 					echo '
 					<tr>
-						<th scope = "row" >' . $light[ "name" ] . '</th>
+						<th scope = "row"><a href = "./light/settings.php?light_id=' . $light[ "id" ] . '" >' . $light[ "name" ] . '</a></th>
 						<td>' . $group[ "name" ] . '</td>
 						<td>' . $light[ "id_animation" ] . '</td>
 						<td>' . $light[ "sub_playlist_name" ] . '</td>
-						<td>' . $light[ "leds_number" ] . '</td>
+						<td>' . $light[ "board_leds_number" ] . '</td>
 					</tr>
 					';
 				}
@@ -71,6 +75,7 @@
 				';
 		}
 		?>
+		</div>
 	</body>
 </html>
 <?php
