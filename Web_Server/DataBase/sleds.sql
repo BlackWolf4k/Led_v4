@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 19, 2023 at 05:42 PM
+-- Generation Time: Feb 21, 2023 at 05:28 PM
 -- Server version: 10.5.18-MariaDB-0+deb11u1
 -- PHP Version: 7.4.33
 
@@ -31,6 +31,7 @@ CREATE TABLE `animation` (
   `id` int(11) NOT NULL,
   `id_pattern` int(11) NOT NULL,
   `id_playlist` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `leds_number` int(11) NOT NULL,
   `phases` int(11) NOT NULL,
   `delay` int(3) NOT NULL,
@@ -42,10 +43,10 @@ CREATE TABLE `animation` (
 -- Dumping data for table `animation`
 --
 
-INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `leds_number`, `phases`, `delay`, `repeat`, `file_name`) VALUES
-(1, 1, 1, 10, 10, 10, 255, 'test.dat'),
-(2, 1, 1, 20, 20, 20, 255, 'test.dat'),
-(3, 1, 1, 30, 30, 30, 255, 'test.dat');
+INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `name`, `leds_number`, `phases`, `delay`, `repeat`, `file_name`) VALUES
+(1, 1, 1, 'Test_one', 10, 10, 10, 255, 'test.dat'),
+(2, 1, 1, 'Test_two', 20, 20, 20, 255, 'test.dat'),
+(3, 1, 1, 'Test_three', 30, 30, 30, 255, 'test.dat');
 
 -- --------------------------------------------------------
 
@@ -104,7 +105,7 @@ CREATE TABLE `light` (
 --
 
 INSERT INTO `light` (`id`, `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES
-(3, 1, 'Bed', 1, 3, 1),
+(3, 1, 'Bed', 1, 1, 1),
 (4, 2, 'Desk', 1, 2, 2);
 
 -- --------------------------------------------------------
@@ -123,7 +124,8 @@ CREATE TABLE `pattern` (
 --
 
 INSERT INTO `pattern` (`id`, `name`) VALUES
-(1, 'Standard');
+(1, 'Standard'),
+(2, 'Rainbow');
 
 -- --------------------------------------------------------
 
@@ -332,7 +334,7 @@ ALTER TABLE `light`
 -- AUTO_INCREMENT for table `pattern`
 --
 ALTER TABLE `pattern`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `playlist`
