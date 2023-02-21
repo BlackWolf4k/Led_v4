@@ -9,3 +9,14 @@
 	width: 30px;
 	height: 30px;
 }
+
+.animation
+{
+	/*border-left: 1px solid #dddddd;*/
+	border-left: 1px solid black;
+}
+
+hr
+{
+	/*background-color: black;*/
+}

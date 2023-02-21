@@ -48,17 +48,59 @@
 					<label class="form-label" for = "phases_number_input" >Number of Phases</label>
 					<input class="form-control" type = "number" id = "phases_number_input" />
 				</div>
-				<div class = "form-outline mb-4" >
-					<label class="form-label" for = "delay_input" >Delay ( milliseconds )</label>
-					<input class="form-control" type = "number" id = "delay_input" />
+				<div class = "row" >
+					<div class = "col" >
+						<label class="form-label" for = "delay_input" >Delay ( milliseconds )</label>
+						<input class="form-control" type = "number" id = "delay_input" />
+					</div>
+					<div class = "col" >
+						<label class="form-label" for = "repetitions_input" >Repetitions</label>
+						<input class="form-control" type = "range" min = "1" max = "255" value = "255/2" id = "repetitions_input" />
+					</div>
 				</div>
+				<hr>
 				<button class="btn btn-primary btn-block mb-4" onclick = "create_strip()">Create</button>
 			</div>
-			<div>
+			<hr style = "background-color: black;" >
+			<div class = "animation_editing">
+				<label class="form-label" for = "phase_number" >Number of Phase</label>
+				<select class="form-control" id = "phase_number" onchange = "change_phase()" >
+				</select>
 				<hr>
+				<div>
+					<label class="form-label" for = "phase_number" >Pixel Number</label>
+					<input class="form-control" type = "number" id = "phase_number" />
+				</div>
+				<hr>
+				<div class = "row" >
+					<div class = "col" >
+						<label class="form-label" for = "from_pixel" >From</label>
+						<input class="form-control" type = "number" id = "from_pixel" />
+					</div>
+					<div class = "col" >
+						<label class="form-label" for = "to_pixel" >To</label>
+						<input class="form-control" type = "number" id = "to_pixel" />
+					</div>
+				</div>
+				<hr>
+				<div>
+					<label class="form-label" for = "pixel_color" >Color</label>
+					<input class="form-control" type = "color" id = "pixel_color" value = "#ff00ff"/>
+				</div>
+				<hr>
+				<div class = "row" >
+					<div class = "col" >
+						<button class="btn btn-primary btn-block mb-4" onclick = "change_colors()">Change</button>
+					</div>
+					<div class = "col" >
+						<button class="btn btn-primary btn-block mb-4" onclick = "play_stop()" id = "play" >Play</button>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class = "animation col" >
+		<div class = "animation col">
+			<div class = "h-100 d-flex align-items-center justify-content-center" id = "strip" >
+			</div>
 		</div>
 	</body>
 </html>
