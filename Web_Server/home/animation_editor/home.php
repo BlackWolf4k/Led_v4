@@ -99,6 +99,20 @@
 			</div>
 		</div>
 		<div class = "animation col">
+			<nav class="navbar navbar">
+				<div>
+					<!--<label class="form-label" for = "pixel_color" >Animation Name</label>-->
+					<input class="form-control" type = "text" id = "animation_name" />
+				</div>
+				<div>
+					<!--<label class="form-label" for = "pixel_color" >Color</label>-->
+					<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "save_animation" >IDK</button>
+				</div>
+				<div>
+				<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "save_animation" >Save</button>
+				</div>
+			</nav>
+			<hr>
 			<div class = "h-100 d-flex align-items-center justify-content-center" id = "strip" >
 			</div>
 		</div>

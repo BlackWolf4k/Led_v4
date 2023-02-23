@@ -101,7 +101,6 @@ function play()
 			document.getElementById( "pixel_" + i ).style = style;
 		}
 	}
-	console.log( playing );
 }
 
 // style=\"background-image: radial-gradient(rgb(255, 0, 255), rgba(255, 0, 255, 0.6), rgba(255, 0, 255, 0.1)), url(\"images/pixel.png\");\"
