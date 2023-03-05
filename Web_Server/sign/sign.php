@@ -64,6 +64,8 @@
 		$statement -> bind_param( "sss", $_POST[ "email" ], $_POST[ "username" ], $password );
 		$statement -> execute();
 
+		// Create a directory for the user
+
 		// Redirect to login page
 		header( "Location: ./signin.php" );
 		die();

@@ -14,9 +14,17 @@
 {
 	/*border-left: 1px solid #dddddd;*/
 	border-left: 1px solid black;
+	margin: 1%;
 }
 
 hr
 {
 	/*background-color: black;*/
+}
+
+.strip
+{
+	margin: 1%;
+	height: 50%;
+	border-bottom: 1px solid black;
 }

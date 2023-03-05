@@ -22,6 +22,6 @@ function change_sub_playlists( selected_group )
 	};
 
 	// Send the request
-	xmlhttp.open("GET","get_sub_playlist.php?group_id=" + selected_group, true );
+	xmlhttp.open( "GET", "get_sub_playlist.php?group_id=" + selected_group, true );
 	xmlhttp.send();
 }

@@ -23,6 +23,12 @@
 	</head>
 	<body>
 	<nav class="navbar navbar-dark bg-dark">
+		<div>
+			<a href = "./animation_editor/home.php"><img src = "./images/pixel.png"/></a>
+		</div>
+		<div>
+			<button onclick="log_out()" >LogOut</button>
+		</div>
 	</nav>
 	<div class = "lights_table" >
 		<?php

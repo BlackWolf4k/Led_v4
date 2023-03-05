@@ -26,7 +26,7 @@
 			<div class = "animation_input" >
 				<div class = "form-outline mb-4" >
 					<label class="form-label" for = "pixels_number_input" >Number of Pixels</label>
-					<input class="form-control" type = "number" id = "pixels_number_input" />
+					<input class="form-control" type = "number" id = "pixels_number_input" value = "0" />
 				</div>
 				<div class = "form-outline mb-4" >
 					<label class="form-label" for = "pattern_input" >Pattern</label>
@@ -46,12 +46,12 @@
 				</div>
 				<div class = "form-outline mb-4" >
 					<label class="form-label" for = "phases_number_input" >Number of Phases</label>
-					<input class="form-control" type = "number" id = "phases_number_input" />
+					<input class="form-control" type = "number" id = "phases_number_input" value = "0" />
 				</div>
 				<div class = "row" >
 					<div class = "col" >
 						<label class="form-label" for = "delay_input" >Delay ( milliseconds )</label>
-						<input class="form-control" type = "number" id = "delay_input" />
+						<input class="form-control" type = "number" id = "delay_input" value = "0" />
 					</div>
 					<div class = "col" >
 						<label class="form-label" for = "repetitions_input" >Repetitions</label>
@@ -64,22 +64,22 @@
 			<hr style = "background-color: black;" >
 			<div class = "animation_editing">
 				<label class="form-label" for = "phase_number" >Number of Phase</label>
-				<select class="form-control" id = "phase_number" onchange = "change_phase()" >
+				<select class="form-control" id = "phase_number" onchange = "display_editor_strip()" >
 				</select>
-				<hr>
+				<!--<hr>
 				<div>
-					<label class="form-label" for = "phase_number" >Pixel Number</label>
-					<input class="form-control" type = "number" id = "phase_number" />
-				</div>
+					<label class="form-label" for = "pixel_number" >Pixel Number</label>
+					<input class="form-control" type = "number" id = "pixel_number" value = "0"/>
+				</div>-->
 				<hr>
 				<div class = "row" >
 					<div class = "col" >
 						<label class="form-label" for = "from_pixel" >From</label>
-						<input class="form-control" type = "number" id = "from_pixel" />
+						<input class="form-control" type = "number" id = "from_pixel" value = "0"/>
 					</div>
 					<div class = "col" >
 						<label class="form-label" for = "to_pixel" >To</label>
-						<input class="form-control" type = "number" id = "to_pixel" />
+						<input class="form-control" type = "number" id = "to_pixel" value = "0"/>
 					</div>
 				</div>
 				<hr>
@@ -99,6 +99,7 @@
 			</div>
 		</div>
 		<div class = "animation col">
+			<div class = "row h-100 flex-column" ><!-- h-100 d-flex align-items-center justify-content-center -->
 			<nav class="navbar navbar">
 				<div>
 					<!--<label class="form-label" for = "pixel_color" >Animation Name</label>-->
@@ -106,14 +107,21 @@
 				</div>
 				<div>
 					<!--<label class="form-label" for = "pixel_color" >Color</label>-->
-					<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "save_animation" >IDK</button>
+					<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" >IDK</button>
 				</div>
 				<div>
-				<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "save_animation" >Save</button>
+					<form action = "./upload_animation.php" method = "post" >
+						<input type = "hidden" value = "1" name = "animation" id = "animation_body_post" >
+						<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" type = "submit" >Save</button>
+					</form>
 				</div>
 			</nav>
 			<hr>
-			<div class = "h-100 d-flex align-items-center justify-content-center" id = "strip" >
+				<div class = "d-flex align-items-center justify-content-center strip col" id = "strip_editor" >
+				</div>
+				<hr style = "background-color: black;" >
+				<div class = "d-flex align-items-center justify-content-center strip col" id = "strip_animation" >
+				</div>
 			</div>
 		</div>
 	</body>
