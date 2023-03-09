@@ -9,4 +9,5 @@ ampy -p /dev/ttyACM0 rmdir Led
 ampy -p /dev/ttyACM0 rmdir Server
 ampy -p /dev/ttyACM0 rmdir Services
 ampy -p /dev/ttyACM0 rmdir Config
+ampy -p /dev/ttyACM0 rmdir Dump
 ampy -p /dev/ttyACM0 rm main.py

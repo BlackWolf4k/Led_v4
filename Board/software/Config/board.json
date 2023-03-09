@@ -1,6 +1,5 @@
 {
 	"board_id": 1,
 	"leds_number": 10,
-	"server_port": 1233,
 	"broadcast_port": 1233
 }

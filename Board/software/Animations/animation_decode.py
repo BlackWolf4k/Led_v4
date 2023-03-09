@@ -1,5 +1,7 @@
 # For structures
 from ctypes import *
+# For animation decoding
+import json
 
 # ANIMATION DESCRIPTOR
 # number_of_lines: 	the number of lines in the file
@@ -16,11 +18,15 @@ from ctypes import *
 #}
 
 # Decode an animation
-# From byte array to dictionary in animation format
+# From string to dictionary in animation format
 # PARAMS ( byte[] ):
 #	-encoded_animation: byte array containing the animation
 # RETURN:
 #	-0: error code
 #	-dict: decoded animation
 def decode_animation( animation ):
-	return animation
+	# Convert the animation
+	dict_animation = json.loads( animation )
+	
+	# Return the animation
+	return dict_animation

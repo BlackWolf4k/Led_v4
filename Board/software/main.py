@@ -2,14 +2,23 @@
 import _thread
 
 # Import needed libraries
-#from Connections import connection
+from Connections import connection
 import Animations.animation as animation
+
+# To dump Data
+from File import write
 
 # Main function
 if __name__ == "__main__":
 	# Connect to the wifi
-	#status = connection.connect()
-	print( animation.get_animation() )
+	connection.init()
+	status = connection.connect()
+	animation_ = animation.get_animation()
+
+	write.dump_json( animation_ )
+
+	print( "Ended" )
+
 
 	# If connection fails play offline animation
 	#if ( status == 0 )

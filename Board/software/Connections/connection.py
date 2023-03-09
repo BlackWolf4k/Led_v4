@@ -16,23 +16,21 @@ def init():
 	wlan.active( True )
 
 # Connect to the wifi
-# RETURN:
+# RETURN ( int ):
 #	-0: error code
 #	-1: success code
 def connect():
 	global wlan
 
 	# Read from the connection config file the ssid and the password
-	file_content = file_read( "Config/wifi.conf" )
+	wifi_config = read.read_conf_file( "wifi.json" )
 
 	# Check that the opening was sucessful
-	if ( file_content == 0 ):
+	if ( wifi_config == 0 ):
 		return 0
 
-	content = content.split( ":" )
-
 	# Connect
-	wlan.connect( content[0], content[1] )
+	wlan.connect( wifi_config[ "ssid" ], wifi_config[ "password" ] )
 
 	# Check if connected
 	if ( wlan.isconnected() == False ):
@@ -48,8 +46,8 @@ def disconnect():
 	wlan.disconnect()
 
 # Scan for the aveilable wifi networks
-# RETURN
-#	-list: list of the networks ( may be empty )
+# RETURN ( array )
+#	-array: list of the networks ( may be empty )
 def scan():
 	global wlan
 

@@ -14,9 +14,12 @@ def get_animation():
 	response = requests.board_server()
 
 	# Check the returned value
-	if ( response == b'{}' ):
+	if ( response == b'{}' or response == 0 ):
 		# Return an error code
 		return 0
 	else:
-		# Return the decode recived content
-		return animation_decode.decode_animation( response )
+		# Decode the animation from byte array to string
+		animation_string = response.decode( "utf-8" )
+
+		# Return the decode animation
+		return animation_decode.decode_animation( animation_string )

@@ -116,16 +116,22 @@
 		$statement -> execute();
 
 		// Read the animation path
-		$animation_filename = "./animations/" . $row[ "file_name" ];
-		
+		$animation_filename = "./users/" . $row[ "file_name" ];
+
 		// Check the esistence of the file
 		if ( file_exists( $animation_filename ) )
 		{
+			// Store the size of the file
+			$file_size = filesize( $animation_filename );
+
 			// Open the file
 			$animation_file = fopen( $animation_filename, "rb" );
 
 			// Read the file content
-			$animation -> body = fread( $animation_file, filesize( $animation_filename ) );
+			$binary_body = fread( $animation_file, $file_size );
+
+			// Convert the body content
+			$animation -> body = unpack( sprintf( 'C%d', $file_size ), $binary_body );
 
 			// Close the file
 			fclose( $animation_file );
@@ -138,6 +144,7 @@
 		}
 
 		// Return the json containing the response
+		// var_dump( get_object_vars( $animation ) );
 		echo json_encode( get_object_vars( $animation ) );
 	}
 

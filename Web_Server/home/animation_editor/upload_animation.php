@@ -49,7 +49,11 @@
 	$result = $result -> fetch_assoc();
 
 	// The timestamp is used as filename to avoid concurrency problems
+	// The location for the writing operations
 	$animation_filename = "../../users/" . $result[ "username" ] . "/" . strval( time() ) . ".dat";
+
+	// The location for the database
+	$animation_file_location = $result[ "username" ] . "/" . strval( time() ) . ".dat";
 
 	$binary_animation = "";
 
@@ -89,7 +93,7 @@
 										  $animation[ "descriptor" ][ "phases" ],
 										  $animation[ "descriptor" ][ "delay" ],
 										  $animation[ "descriptor" ][ "repetitions" ],
-										  $animation_filename );
+										  $animation_file_location );
 	$statement -> execute();
 	$result = $statement -> get_result();
 

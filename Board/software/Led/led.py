@@ -1,3 +1,4 @@
+# MOCK
 # Plays an animation passed by argument
 # ARGUMENTS ( dict )
 #	-animation: the animation to play

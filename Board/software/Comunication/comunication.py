@@ -1,6 +1,23 @@
 #import urequests
-import requests as urequests
+import urequests as urequests
 import socket
+
+# Convert a dict to a 'get request' string
+# { "id": 1, "name": "Joe" } => ?id=1&name="Joe"
+# ARGUMENTS ( dict ):
+#	-content: the content to convert in 'get request' form
+# RETURN ( str ):
+#	-str: the converted string
+def __dict_to_str( content ):
+	# The get requests start with a ?
+	get_content = "?"
+	
+	# Convert each key
+	for key in list( content.keys() ):
+		get_content += str( key ) + "=" + str( content[ key ] ) + "&"
+	
+	# Return the converted string
+	return get_content
 
 # Send a get request
 # ARGUMENTS ( str, dict ):
@@ -10,8 +27,11 @@ import socket
 #	-dictionary: containes the response from the server
 #	-0: error code
 def get( url, content ):
+	# Convert the get content into a string
+	get_content = __dict_to_str( content )
+
 	# Send the request
-	response = urequests.get( url, params = content )
+	response = urequests.get( url + get_content )
 
 	# Return the result
 	return response
