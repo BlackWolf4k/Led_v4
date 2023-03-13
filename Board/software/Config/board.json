@@ -1,5 +1,7 @@
 {
 	"board_id": 1,
 	"leds_number": 10,
-	"broadcast_port": 1233
+	"broadcast_port": 1233,
+	"leds_pin": 1,
+	"token": ""
 }

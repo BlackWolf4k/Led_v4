@@ -1,6 +1,11 @@
 #import urequests
 import urequests as urequests
+
+# To boardcast messages
 import socket
+
+# To read config file
+from File import read
 
 # Convert a dict to a 'get request' string
 # { "id": 1, "name": "Joe" } => ?id=1&name="Joe"
@@ -65,3 +70,17 @@ def broadcast( message ):
 
 	# Send the message in broadcast
 	sockt.sendto( message.encode(), ( "255.255.255.255", shared[ "broadcast_port" ] ) )
+
+# Return the url of the web server
+# ARGUMENTS ()
+# RETURN ( string ):
+#	-url: the url of the website
+def get_server_url():
+	# Get the config about the server
+	server_config = read.read_conf_file( "server.json" )
+
+	# Compose the url
+	url = server_config[ "protocol"] + server_config[ "dns" ] + ":" + str( server_config[ "port" ] ) + server_config[ "path" ]
+
+	# Return the url
+	return url

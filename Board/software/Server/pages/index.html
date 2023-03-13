@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+	<body>
+		<div class = "settings" >
+			<form method = "get" action = "./ok.html" >
+				<div class="form-outline mb-4">
+					<label class="form-label" for="board_id">Number of Leds</label>
+					<input type="number" id="board_id" class="form-control" value = "leds" />
+				</div>
+				<div class="form-outline mb-4">
+					<label class="form-label" for="actual_animation">Actual Animation</label>
+					<input type="text" id="board_id" class="form-control" value = "%actual_animation" />
+				</div>
+				<div class="form-outline mb-4">
+					<label class="form-label" for="offline_animation">Offline Animation</label>
+					<input type="text" id="offline_animation" class="form-control" value = "%offline_animation" />
+				</div>
+				<button type="submit" class="btn btn-primary btn-block mb-4">Change</button>
+				<input type = "hidden" value = "7" name = "code" >
+			</form>
+		</div>
+	</body>
+</html>

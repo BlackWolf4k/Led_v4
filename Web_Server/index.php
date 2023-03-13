@@ -4,7 +4,7 @@
 	if ( isset( $_GET[ "board_id" ] ) && $_GET[ "board_id" ] != "" )
 	{
 		// A board connected
-		include "./api/requests.php";
+		include "./api/handler.php";
 
 		// Handle the request of the board
 		handle_request();

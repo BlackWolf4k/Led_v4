@@ -3,7 +3,10 @@ import _thread
 
 # Import needed libraries
 from Connections import connection
-import Animations.animation as animation
+import Animation.animation as animation
+
+# To run the webserver
+from Server import server_main
 
 # To dump Data
 from File import write
@@ -13,9 +16,25 @@ if __name__ == "__main__":
 	# Connect to the wifi
 	connection.init()
 	status = connection.connect()
-	animation_ = animation.get_animation()
 
-	write.dump_json( animation_ )
+	print( connection.wlan.ifconfig() )
+
+	# Configure the webserver
+	server_main.init()
+	server_main.main()
+
+	# Start the web server
+	#server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
+
+	# Get the animation
+	#animation_ = animation.get_animation()
+
+	# Dump the animation
+	#write.dump_json( animation_ )
+
+	print( connection.wlan.ifconfig() )
+
+	# animation.play_animation( animation_ )
 
 	print( "Ended" )
 

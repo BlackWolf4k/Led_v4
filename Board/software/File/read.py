@@ -1,5 +1,8 @@
 import json
 
+# To read directories
+import os
+
 # Read a file
 # ARGUMENTS ( str ):
 #	-filename: the name of the file to read
@@ -44,3 +47,18 @@ def read_conf_file( filename ):
 
 	# Return the json
 	return content
+
+# List all the files in a directory
+# ARGUMENTS ( string ):
+#	-path: the directory absolute path
+# RETURNS ( list ):
+#	-files_list: the list of the found devices
+def list_directory( path ):
+	# Go to the directory
+	os.chdir( path )
+
+	# List the files
+	files_list = os.listdir()
+
+	# Return the result
+	return files_list
