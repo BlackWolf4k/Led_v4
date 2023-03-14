@@ -21,11 +21,35 @@ def write_conf_file( filename, content ):
 # It appends at the end of the file
 # ARGUMENTS ( dict ):
 #	-dictionary_content: the dictionary to dump
+# RETURNS ( int ):
+#	-0: error code
 def dump_json( dictionary_content ):
 	# Open the file in append mode
-	with open( "Dump/json_dump.json", "a" ) as json_file:
-		# Dump the json
-		dictionary_content = json.dumps( dictionary_content )
+	try:
+		with open( "Dump/json_dump.json", "a" ) as json_file:
+			# Dump the json
+			dictionary_content = json.dumps( dictionary_content )
 
-		# Write to the file the dumped json
-		json_file.write( dictionary_content )
+			# Write to the file the dumped json
+			json_file.write( dictionary_content )
+	except OSError:
+		return 0
+
+# Dump a string ( plain text ) in Dump/plain_dumo.txt
+# It appends at the end of the file
+# ARGUMENTS ( str ):
+#	-plain_text: the plain text to dump
+# RETURNS ( int ):
+#	-0: error code
+def dump_plain( plain_text ):
+	# Open the file in append mode
+	try:
+		plain_text_file = open( "Dump/plain_dump.txt", "a" )
+	except OSError:
+		return 0
+	
+	# Write the plain text
+	plain_text_file.write( plain_text )
+
+	# Close the file
+	plain_text_file.close()

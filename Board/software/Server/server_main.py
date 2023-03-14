@@ -6,6 +6,9 @@ from Animation.animation import play
 # To read pages
 from File import read
 
+# To dump content
+from File import write
+
 socket_descriptor = 0
 
 # Initialize the webserver
@@ -31,7 +34,7 @@ def main():
 	# Keep listening for connections
 	while True:
 		# Start connection
-		#try:
+		try:
 			print( "Waiting for a client to connect" )
 			# Accept the connection
 			client_connection, address = socket_descriptor.accept()
@@ -40,8 +43,10 @@ def main():
 			# Recive the request
 			request = client_connection.recv( 1024 )
 
+			write.dump_plain( str( request ) )
+
 			# Analize the request
-			response_filename = analize_request( str( request ) )
+			response_filename = analize_request( request )
 
 			# Read the response file content
 			response = read.read_file( "/Server/pages/" + response_filename )
@@ -55,10 +60,10 @@ def main():
 			# Close the connection
 			client_connection.close()
 
-		#except OSError as error: # Except a error
-		#	# Close the connection with the client
-		#	client_connection.close()
-		#	print( "Error" )
+		except OSError as error: # Except a error
+			# Close the connection with the client
+			client_connection.close()
+			print( "Error" )
 
 # Decide what to respond to a request
 # ARGUMENTS ( string ):
@@ -66,12 +71,43 @@ def main():
 # RETURNS ( string ):
 #	-filename: the name of the response file
 def analize_request( request ):
-	# Check if the request contains a code
-	for key in list( codes.keys() ):
-		# Check if the code is contained
-		if ( request.find( "code=" + str( key ) ) ):
-			# Execute the code's function
-			return codes[ key ]()
+	# Get the request path
+	path = get_path( request )
+
+	# Check that the path was interpreted correctly
+	if path == 0:
+		return "error.html" # Return the error page
+
+	print( path )
+
+	# Get the parameters of the request
+	parameters = get_parameters( path )
+
+	# Check that the request contains parameters
+	if ( parameters != {} and parameters != 0 ):
+
+		found_paramters = {}
+
+		# Get all the request parameters that are accepted
+		for key in list( parameters.keys() ):
+			if key in accepted_parameters: # Check if the paramters in acceptable
+				found_paramters[ key ] = parameters[ key ] # Add it to the list of found parameters
+
+		# Do what requested
+		# Check that the paramets list is not empty
+		if found_paramters != {}:
+			# Check that there is a code
+			if "code" not in found_paramters:
+				# Return error page
+				return "error.html"
+
+			# Check that the code's code exists
+			if str( found_paramters[ "code" ] ) not in codes:
+				# Return error page
+				return "error.html"
+
+			# Interpretate the code
+			return codes[ str( found_paramters[ "code" ] ) ]( parameters )
 
 	# Check if asking just a page
 	# Get all the pages
@@ -79,7 +115,7 @@ def analize_request( request ):
 
 	# Check if the request contains a page
 	for page in pages:
-		if ( page in request ): # Check if page contained
+		if ( page in path ): # Check if page contained
 			return page # Return the page
 	
 	# No code or page request found so return the index
@@ -95,6 +131,28 @@ def list_pages():
 
 	# Return the pages
 	return pages
+
+# Returns the path requested in a HTTP request
+# ARGUMENTS ( byte[] ):
+#	-request: the http request
+# RETURNS ( string | int ):
+#	-path: the request path
+#	-0: error code
+def get_path( request ):
+	# Decode the request ( from byte[] to string )
+	request = request.decode( "utf-8" )
+
+	try:
+		# Get the first line of the request ( delimited by '\r\n' )
+		request = ( request.split( "\r\n" ) )[ 0 ]
+
+		# Get the path ( delimited by a ' ' at the beginning and at the end )
+		path = ( request.split( " " ) )[ 1 ]
+
+		# Return the path
+		return path
+	except Exception:
+		return 0
 
 # Get the parameters from the request
 # ARGUMENTS ( string ):
@@ -134,13 +192,24 @@ def get_parameters( request ):
 	return parameters
 
 # Trasmit a message on the broadcast
-def broadcast():
+# ARGUMENTS ( dict ):
+#	-parameters: the parameters of the request
+# RETURN ()
+def broadcast( parameters ):
+	print( "Broadcast" )
 	return
 
 # Modifies the board informations
-def update():
+# ARGUMENTS ( dict ):
+#	-parameters: the parameters of the request
+# RETURN ()
+def update( parameters ):
+	print( "Update" )
 	# Check the values passed
-	return "ok.html"
+	return "error.html"
 
 # Conatins the function that a specific request code has to execute
-codes = { "2" : broadcast, "7" : update }
+codes = { "2": broadcast, "7": update }
+
+# Accepted GET parameters
+accepted_parameters = [ "board_id", "code" ]
