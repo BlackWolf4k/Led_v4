@@ -22,7 +22,7 @@ def update_config_file( filename, data ):
 		return 0 # No content in the file or no file
 
 	# Open the file
-	with open( "Config" + filename, "r" ) as file:
+	with open( "/Config/" + filename, "r" ) as file:
 		# Write one key at time
 		for key in list( data.keys() ):
 			# Check that the key is in the content
@@ -33,6 +33,6 @@ def update_config_file( filename, data ):
 				code = 2 # Return the error to the user
 	
 	# Write the file
-	write_conf_file( filename, data )
+	write.write_conf_file( filename, content )
 
 	return code

@@ -11,6 +11,9 @@ from Server import server_main
 # To dump Data
 from File import write
 
+# To update config file
+from File import update
+
 # Main function
 if __name__ == "__main__":
 	# Connect to the wifi
@@ -28,6 +31,9 @@ if __name__ == "__main__":
 
 	# Get the animation
 	#animation_ = animation.get_animation()
+
+	# Update the name of the actual animation
+	# update.update_config_file( "board.json", { "actual_animation" : animation_[ "name" ] } )
 
 	# Dump the animation
 	#write.dump_json( animation_ )

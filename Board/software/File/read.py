@@ -35,7 +35,7 @@ def read_conf_file( filename ):
 
 	# Open the file
 	try:
-		file = open( "Config/" + filename, "r" ) # Check this
+		file = open( "/Config/" + filename, "r" ) # Check this
 	except: # No file found
 		return 0
 

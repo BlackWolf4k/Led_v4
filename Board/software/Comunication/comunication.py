@@ -7,6 +7,9 @@ import socket
 # To read config file
 from File import read
 
+# Just to get the wlan
+from Connections import connection
+
 # Convert a dict to a 'get request' string
 # { "id": 1, "name": "Joe" } => ?id=1&name="Joe"
 # ARGUMENTS ( dict ):
@@ -63,13 +66,23 @@ def post( url, content ):
 #	-1: success code
 def broadcast( message ):
 	# Create the socket
-	sockt = socket.socket( AF_INET, SOCK_DGRAM )
+	socket_descriptor = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
 	# Set socket to broadcast
-	sockt.setsockopt( socket.SOL_SOCKET, socket.SO_BROADCAST, 1 )
+	# socket_descriptor.setsockopt( socket.SOL_SOCKET, socket.SO_BROADCAST, 1 ) # --> ( not accepted by micropython )
 
-	# Send the message in broadcast
-	sockt.sendto( message.encode(), ( "255.255.255.255", shared[ "broadcast_port" ] ) )
+	# Do broadcasting the hard way
+	# Just do it for small groups ( max is 0.0.0.255 )
+	# Get the subnet mask relevant byte
+	mask_relevant_byte = int( connection.wlan.ifconfig()[ 1 ].split( "." )[ 3 ] )
+
+	# Get the actual address group
+	address_group = connection.wlan.ifconfig()[ 0 ].split( "." )[ 0 : 3 ]
+
+	# Broadcast the message
+	for i in range( 1, mask_relevant_byte, 1 ):
+		# Send the message to a specific address
+		socket_descriptor.sendto( message.encode(), ( address_group + str( i ), shared[ "broadcast_port" ] ) )
 
 # Return the url of the web server
 # ARGUMENTS ()

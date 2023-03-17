@@ -6,6 +6,7 @@
 		public $delay;
 		public $repeat;
 		public $pattern;
+		public $name;
 	}
 
 	class animation
@@ -108,6 +109,7 @@
 		$animation_descriptor -> delay = $row[ "delay" ];
 		$animation_descriptor -> repeat = $row[ "repeat" ];
 		$animation_descriptor -> pattern = $row[ "id_pattern" ];
+		$animation_descriptor -> name = $row[ "name" ];
 		$animation -> descriptor = $animation_descriptor;
 
 		// Change light actual animation id
@@ -401,7 +403,7 @@
 
 	// Relatation array request-code -> response-function
 	$codes_responses = [
-		0x0001 => "response_server_board",
+		0x0001 => "response_server_board", // http://192.136.60.75:81/?code=1&board_id=1&token=f49140e28dd84b5e329fb33f02970cbe21bf6edb
 		0x0003 => "response_sync_board_server",
 		0x0005 => "response_server_board_specific_animation"
 	];

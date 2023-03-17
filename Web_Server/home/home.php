@@ -12,6 +12,14 @@
 	}
 	else // User is signed in
 	{
+		if ( isset( $_POST[ "new_token" ] ) && $_POST[ "new_token" ] == 1 )
+		{
+			include "./profile/generate_token.php";
+
+			generate_token();
+
+			unset( $_POST[ "new_token" ] );
+		}
 		include "../connection/sleds_connect.php";
 ?>
 <!DOCTYPE html>
@@ -28,6 +36,12 @@
 		</div>
 		<div>
 			<button onclick="log_out()" >LogOut</button>
+		</div>
+		<div>
+			<form action="/home/home.php" method="post">
+				<input type = "hidden" name="new_token" value="1" />
+				<button type="submit">New Token</button>
+			</from>
 		</div>
 	</nav>
 	<div class = "lights_table" >

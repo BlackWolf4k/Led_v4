@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 21, 2023 at 05:28 PM
+-- Generation Time: Mar 17, 2023 at 08:33 PM
 -- Server version: 10.5.18-MariaDB-0+deb11u1
 -- PHP Version: 7.4.33
 
@@ -44,9 +44,11 @@ CREATE TABLE `animation` (
 --
 
 INSERT INTO `animation` (`id`, `id_pattern`, `id_playlist`, `name`, `leds_number`, `phases`, `delay`, `repeat`, `file_name`) VALUES
-(1, 1, 1, 'Test_one', 10, 10, 10, 255, 'test.dat'),
-(2, 1, 1, 'Test_two', 20, 20, 20, 255, 'test.dat'),
-(3, 1, 1, 'Test_three', 30, 30, 30, 255, 'test.dat');
+(1, 1, 1, 'Test_one', 10, 10, 10, 255, 'admin/1678049606.dat'),
+(2, 1, 1, 'Test_two', 10, 10, 20, 255, 'admin/1678049606.dat'),
+(3, 1, 1, 'Test_three', 10, 10, 30, 255, 'admin/1678049606.dat'),
+(10, 1, 1, 'prova', 10, 10, 1000, 128, 'admin/1678035521.dat'),
+(11, 1, 1, 'prova', 20, 5, 600, 136, 'admin/1678049606.dat');
 
 -- --------------------------------------------------------
 
@@ -105,8 +107,8 @@ CREATE TABLE `light` (
 --
 
 INSERT INTO `light` (`id`, `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES
-(3, 1, 'Bed', 1, 1, 1),
-(4, 2, 'Desk', 1, 2, 2);
+(3, 1, 'Bed', 1, 10, 1),
+(4, 2, 'Desk', 1, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -166,7 +168,8 @@ INSERT INTO `relation_animation_sub_playlist` (`id_animation`, `id_sub_playlist`
 (2, 1),
 (3, 1),
 (2, 2),
-(3, 2);
+(3, 2),
+(10, 1);
 
 -- --------------------------------------------------------
 
@@ -217,7 +220,7 @@ CREATE TABLE `user` (
   `email` varchar(30) NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `token` varchar(20) DEFAULT NULL
+  `token` varchar(40) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Contains the informations of a user';
 
 --
@@ -225,7 +228,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `username`, `password`, `token`) VALUES
-(1, 'admin@sleds.com', 'admin', '$2y$10$ha7GMP1Co8HdJHeGKsDUJ.Ap8W6pA8hsT5jILQaDB7C5hbSlAgCke', NULL),
+(1, 'admin@sleds.com', 'admin', '$2y$10$ha7GMP1Co8HdJHeGKsDUJ.Ap8W6pA8hsT5jILQaDB7C5hbSlAgCke', 'f49140e28dd84b5e329fb33f02970cbe21bf6edb'),
 (2, 'creator@sleds.com', 'creator', '$2y$10$.hxJYshh.rAYHOWDcc6lK.i6MvSQOQo7I08iDO5tYWstbKreCCgHW', NULL);
 
 --
@@ -310,7 +313,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `animation`
 --
 ALTER TABLE `animation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `board`

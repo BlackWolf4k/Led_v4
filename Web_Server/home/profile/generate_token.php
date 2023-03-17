@@ -4,6 +4,9 @@
 	// RETURNS ( none )
 	function generate_token()
 	{
+		// Connect to the database
+		include "../connection/sleds_connect.php";
+
 		$token = "";
 		$statement = "";
 
@@ -23,7 +26,8 @@
 		} while ( mysqli_num_rows( $statement -> get_result() ) > 0 );
 
 		// Insert the token in the database
-		$statement = $sleds_database -> prepare( "UPDATE user SET token=s WHERE id=i" );
+		echo $token;
+		$statement = $sleds_database -> prepare( "UPDATE user SET token=? WHERE id=?" );
 		$statement -> bind_param( "si", $token, $_SESSION[ "user_id" ] );
 		$statement -> execute();
 	}

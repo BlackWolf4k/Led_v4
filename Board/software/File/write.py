@@ -10,7 +10,7 @@ import json
 #	-1: success code
 def write_conf_file( filename, content ):
 	# Open the file
-	with open( "Config/" + filename, "r" ) as config_file:
+	with open( "/Config/" + filename, "w" ) as config_file:
 		# Dump the json
 		content = json.dumps( content )
 
@@ -26,7 +26,7 @@ def write_conf_file( filename, content ):
 def dump_json( dictionary_content ):
 	# Open the file in append mode
 	try:
-		with open( "Dump/json_dump.json", "a" ) as json_file:
+		with open( "/Dump/json_dump.json", "a" ) as json_file:
 			# Dump the json
 			dictionary_content = json.dumps( dictionary_content )
 

@@ -3,11 +3,17 @@ import socket
 # To tell the other core to play or stop playing an animation
 from Animation.animation import play
 
+# To interpretate web pages
+from Server import interpreter
+
 # To read pages
 from File import read
 
 # To dump content
 from File import write
+
+# To update config files
+from File import update
 
 socket_descriptor = 0
 
@@ -43,13 +49,11 @@ def main():
 			# Recive the request
 			request = client_connection.recv( 1024 )
 
-			write.dump_plain( str( request ) )
-
 			# Analize the request
 			response_filename = analize_request( request )
 
-			# Read the response file content
-			response = read.read_file( "/Server/pages/" + response_filename )
+			# Get the content of the page
+			response = interpreter.interpreter( response_filename )
 
 			# Send html response header
 			client_connection.send( "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" )
@@ -79,6 +83,7 @@ def analize_request( request ):
 		return "error.html" # Return the error page
 
 	print( path )
+	print( str( request ) )
 
 	# Get the parameters of the request
 	parameters = get_parameters( path )
@@ -191,6 +196,8 @@ def get_parameters( request ):
 	# return the parameters
 	return parameters
 
+# Interpretate page
+
 # Trasmit a message on the broadcast
 # ARGUMENTS ( dict ):
 #	-parameters: the parameters of the request
@@ -203,13 +210,30 @@ def broadcast( parameters ):
 # ARGUMENTS ( dict ):
 #	-parameters: the parameters of the request
 # RETURN ()
-def update( parameters ):
+def update_config( parameters ):
 	print( "Update" )
+
 	# Check the values passed
-	return "error.html"
+
+	# Update the config file
+	update.update_config_file( "board.json", parameters )
+
+	# Return the index page
+	return "index.html"
+
+def update_token( paramters ):
+	print( "Update Token" )
+
+	# Check the passed values
+
+	# Update the config file
+	update.update_config_file( "board.json", parameters )
+
+	# Return the token changing page
+	return "token_page.html"
 
 # Conatins the function that a specific request code has to execute
-codes = { "2": broadcast, "7": update }
+codes = { "2": broadcast, "7": update_config, "8": update_token }
 
 # Accepted GET parameters
 accepted_parameters = [ "board_id", "code" ]
