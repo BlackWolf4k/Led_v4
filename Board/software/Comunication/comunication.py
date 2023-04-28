@@ -39,6 +39,7 @@ def get( url, content ):
 	get_content = __dict_to_str( content )
 
 	# Send the request
+	print( url + get_content )
 	response = urequests.get( url + get_content )
 
 	# Return the result

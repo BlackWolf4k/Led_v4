@@ -14,7 +14,7 @@ def board_server():
 
 	# Make the request
 	response = comunication.get( comunication.get_server_url(),
-					  { "board_id": board_config[ "board_id" ], "code": 0x0001 } )
+					  { "board_id": board_config[ "board_id" ], "code": 0x0001, "token": board_config[ "token" ] } )
 
 	# Check the response
 	if response.status_code != 200:

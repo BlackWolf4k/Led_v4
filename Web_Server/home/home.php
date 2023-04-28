@@ -38,6 +38,9 @@
 			<button onclick="log_out()" >LogOut</button>
 		</div>
 		<div>
+			<a href = "./profile/settings.php" ><button>Profile</button></a>
+		</div>
+		<div>
 			<form action="/home/home.php" method="post">
 				<input type = "hidden" name="new_token" value="1" />
 				<button type="submit">New Token</button>

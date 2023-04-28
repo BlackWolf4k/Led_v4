@@ -24,23 +24,23 @@ if __name__ == "__main__":
 
 	# Configure the webserver
 	server_main.init()
-	server_main.main()
+	#server_main.main()
 
 	# Start the web server
-	#server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
+	server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
 
 	# Get the animation
-	#animation_ = animation.get_animation()
+	animation_ = animation.get_animation()
 
 	# Update the name of the actual animation
-	# update.update_config_file( "board.json", { "actual_animation" : animation_[ "name" ] } )
+	#update.update_config_file( "board.json", { "actual_animation" : animation_[ "descriptor" ][ "name" ] } )
 
 	# Dump the animation
 	#write.dump_json( animation_ )
 
-	print( connection.wlan.ifconfig() )
+	#print( connection.wlan.ifconfig() )
 
-	# animation.play_animation( animation_ )
+	animation.play_animation( animation_ )
 
 	print( "Ended" )
 

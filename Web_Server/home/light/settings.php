@@ -21,7 +21,7 @@
 		include "../../connection/sleds_connect.php";
 
 		// Get light and board informations
-		$statement = $sleds_database -> prepare( "SELECT * FROM light RIGHT JOIN board ON light.id_board=board.id WHERE light.id=?" );
+		$statement = $sleds_database -> prepare( "SELECT light.name, light.id_sub_playlist, board.leds_number, light.id_animation FROM light JOIN board ON light.id_board=board.id WHERE light.id=?" );
 		$statement -> bind_param( "i", $_GET[ "light_id" ] );
 		$statement -> execute();
 		$light_result = $statement -> get_result();
@@ -79,8 +79,27 @@
 					</select>
 				</div>
 				<div class="form-outline mb-4">
-					<label class="form-label" for="actual_animation">Actual Animation ( to do )</label>
-					<select type="number" id="actual_animation" class="form-control" value = "">
+					<label class="form-label" for="actual_animation">Actual Animation</label>
+					<select type="text" id="actual_animation" class="form-control">
+						<option disabled selected value></option>
+						<?php
+						// Get all the animations of the subplaylist
+						$statement = $sleds_database -> prepare( "SELECT animation.name, animation.id FROM animation JOIN relation_animation_sub_playlist ON animation.id=relation_animation_sub_playlist.id_animation WHERE relation_animation_sub_playlist.id_sub_playlist=?" );
+						$statement -> bind_param( "i", $light_result[ "id_sub_playlist" ] );
+						$statement -> execute();
+						$animation_result = $statement -> get_result();
+
+						if ( mysqli_num_rows( $animation_result ) > 0 )
+						{
+							while ( $animation = $animation_result -> fetch_assoc() )
+							{
+								echo "<option value='" . $animation[ "id" ] . "'";
+								if ( $animation[ "id" ] == $light_result[ "id_animation" ] )
+									echo "selected";
+								echo ">" . $animation[ "name" ] . "</option>";
+							}
+						}
+						?>
 					</select>
 				</div>
 				<div class="form-outline mb-4">

@@ -24,6 +24,10 @@
 	<body class = "row">
 		<div class = "input col-3" >
 			<div class = "animation_input" >
+				<!--<div>
+					<label class="form-label" for = "pixel_color" >Animation Name</label>
+					<input class="form-control" type = "text" id = "animation_name" />
+				</div>-->
 				<div class = "form-outline mb-4" >
 					<label class="form-label" for = "pixels_number_input" >Number of Pixels</label>
 					<input class="form-control" type = "number" id = "pixels_number_input" value = "0" />
@@ -97,25 +101,21 @@
 					</div>
 				</div>
 			</div>
+			<hr style = "background-color:black;">
+			<div class = "row" >
+					<div class = "col" >
+						<input class="form-control" type = "text" id = "animation_name" />
+					</div>
+					<div class = "col-s" >
+						<form action = "./upload_animation.php" method = "post" >
+							<input type = "hidden" value = "1" name = "animation" id = "animation_body_post" >
+							<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" type = "submit" >Save</button>
+						</form>
+					</div>
+				</div>
 		</div>
 		<div class = "animation col">
 			<div class = "row h-100 flex-column" ><!-- h-100 d-flex align-items-center justify-content-center -->
-			<nav class="navbar navbar">
-				<div>
-					<!--<label class="form-label" for = "pixel_color" >Animation Name</label>-->
-					<input class="form-control" type = "text" id = "animation_name" />
-				</div>
-				<div>
-					<!--<label class="form-label" for = "pixel_color" >Color</label>-->
-					<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" >IDK</button>
-				</div>
-				<div>
-					<form action = "./upload_animation.php" method = "post" >
-						<input type = "hidden" value = "1" name = "animation" id = "animation_body_post" >
-						<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" type = "submit" >Save</button>
-					</form>
-				</div>
-			</nav>
 			<hr>
 				<div class = "d-flex align-items-center justify-content-center strip col" id = "strip_editor" >
 				</div>
