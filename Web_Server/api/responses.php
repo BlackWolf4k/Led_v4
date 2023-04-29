@@ -261,16 +261,23 @@
 		// Change content type to json
 		header( "Content-Type:application/json" );
 
+		// Check if a name of animation was passed
+		if ( !isset( $_GET[ "animation_name" ] ) || empty( $_GET[ "animation_name" ] ) )
+		{
+			echo '{ "Error" : "Plase specify an animation name" }';
+			die();
+		}
+
 		$animation = new animation();
 
 		// Get the light sub_playlist and actual animation id from the board id
-		$statement = $sleds_database -> prepare( "SELECT id_animation, id_sub_playlist FROM light WHERE id_board=?" );
+		$statement = $sleds_database -> prepare( "SELECT id_sub_playlist FROM light WHERE id_board=?" );
 		$statement -> bind_param( "i", $_GET[ "board_id" ] );
 		$statement -> execute();
 		$result = $statement -> get_result();
 
 		// Check if there was output
-		if ( mysqli_num_rows( $result ) <= 0 ) // The biard was not found
+		if ( mysqli_num_rows( $result ) <= 0 ) // The board was not found
 		{
 			// Return error code
 			echo "{}";
@@ -282,17 +289,12 @@
 		$actual_animation_id = $row[ "id_animation" ];
 		$subplaylist_id = $row[ "id_sub_playlist" ];
 
-		// Check that the asked animation is in the list
-		$statement = $sleds_database -> prepare( "SELECT id_animation FROM relation_animation_sub_playlist WHERE id_sub_playlist=?" );
-		$statement -> bind_param( "i", $subplaylist_id );
+		// Check that the asked animation is in the subplaylist
+		$statement = $sleds_database -> prepare( "SELECT id_animation FROM relation_animation_sub_playlist JOIN animation ON animation.id=relation_animation_sub_playlist.id_animation WHERE id_sub_playlist=? AND animation.name LIKE ?" );
+		$statement -> bind_param( "is", $subplaylist_id, $_GET[ "animation_name" ] );
 		$statement -> execute();
 		$result = $statement -> get_result();
-
-		// Get all the animations of the subplaylist
-		$statement = $sleds_database -> prepare( "SELECT id_animation FROM relation_animation_sub_playlist WHERE id_sub_playlist=?" );
-		$statement -> bind_param( "i", $subplaylist_id );
-		$statement -> execute();
-		$result = $statement -> get_result();
+		$animation_id = ( $result -> fetch_assoc() )[ "id_animation" ];
 
 		// Check if there was output
 		if ( mysqli_num_rows( $result ) <= 0 ) // The animation was not found
@@ -302,46 +304,9 @@
 			die();
 		}
 
-		$next_animation_id = 0;
-
-		// Get the next animation id
-		if ( mysqli_num_rows( $result ) == 1 ) // Just one row so repeat the animation
-		{
-			$next_animation_id = $actual_animation_id;
-		}
-		else // More rows to check
-		{
-			$found = 0;
-			
-			/*****************************************************************
-			 ********************|||***CHECK*THIS***|||***********************
-			*********************vvv****************vvv**********************/
-			// Find the following animation
-			for ( $i = 0; $i < mysqli_num_rows( $result ); $i++ )
-			{
-				$row = $result -> fetch_assoc();
-
-				if ( $i == 0 || $found ) // Ensure the circularity of the result
-				{
-					// Set the id of the next animation
-					$next_animation_id = $row[ "id_animation" ];
-
-					// Exit if the previous animation id was the actual animation id
-					if ( $found )
-						break;
-				}
-
-				// Check if the actual row contains the actual animation id
-				if ( $row[ "id_animation" ] == $actual_animation_id )
-				{
-					$found = 1;
-				}
-			}
-		}
-
 		// Get the next animation informations
 		$statement = $sleds_database -> prepare( "SELECT * FROM animation WHERE id=?" );
-		$statement -> bind_param( "i", $next_animation_id );
+		$statement -> bind_param( "i", $animation_id );
 		$statement -> execute();
 		$result = $statement -> get_result();
 		$row = $result -> fetch_assoc();
@@ -357,7 +322,7 @@
 
 		// Change light actual animation id
 		$statement = $sleds_database -> prepare( "UPDATE light SET id_animation=? WHERE id_board=?" );
-		$statement -> bind_param( "ii", $next_animation_id, $_GET[ "board_id" ] );
+		$statement -> bind_param( "ii", $animation_id, $_GET[ "board_id" ] );
 		$statement -> execute();
 
 		// Read the animation path
@@ -401,10 +366,39 @@
 		echo json_encode( get_object_vars( $animation ) );
 	}
 
+	function response_board_config()
+	{
+		// Conntect to the database
+		include "connection/sleds_connect.php";
+
+		// Change content type to json
+		header( "Content-Type:application/json" );
+
+		$statement = $sleds_database -> prepare( "SELECT board.id, light.name, board.leds_number, light.id_animation FROM light JOIN board ON board.id=light.id_board WHERE board.id=?" );
+		$statement -> bind_param( "i", $_GET[ "board_id" ] );
+		$statement -> execute();
+		$result = $statement -> get_result();
+
+		// Board id not found or something went wrong
+		if ( mysqli_num_rows( $result ) <= 0 )
+		{
+			echo "{}";
+			die();
+		}
+		else
+		{
+			// Convert the result to json and print it
+			$board_config = $result -> fetch_assoc();
+			echo json_encode( $board_config );
+			die();
+		}
+	}
+
 	// Relatation array request-code -> response-function
 	$codes_responses = [
 		0x0001 => "response_server_board", // http://192.136.60.75:81/?code=1&board_id=1&token=f49140e28dd84b5e329fb33f02970cbe21bf6edb
 		0x0003 => "response_sync_board_server",
-		0x0005 => "response_server_board_specific_animation"
+		0x0005 => "response_server_board_specific_animation", //
+		0x0007 => "response_board_config" // http://192.136.60.75:81/?code=1&board_id=1&token=f49140e28dd84b5e329fb33f02970cbe21bf6edb
 	];
 ?>

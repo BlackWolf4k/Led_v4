@@ -32,6 +32,13 @@
 			}
 		}
 
+		// Check if really an email
+		if ( !filter_var( $_POST[ "email" ], FILTER_VALIDATE_EMAIL ) )
+		{
+			header( "Location: ./settings.php?error=0" );
+			die();
+		}
+
 		// Check the password are the same
 		if ( $_POST[ "password" ] != $_POST[ "password_confirm" ] )
 		{
@@ -79,7 +86,7 @@
 			if ( empty( $_POST[ $field ] ) )
 			{
 				// Something is empty
-				header( "Location: ./signin.php?error=0" );
+				header( "Location: ./signin.php?error=4" );
 				die();
 			}
 		}

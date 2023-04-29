@@ -18,8 +18,15 @@ foreach( $values_to_check as &$value )
 	if ( !isset( $_POST[ $value ] ) )
 	{
 		header( "Location: ./settings.php?error=0" );
-	die();
+		die();
 	}
+}
+// For some values use the filter var
+// Check if really an email
+if ( !filter_var( $_POST[ "email" ], FILTER_VALIDATE_EMAIL ) )
+{
+	header( "Location: ./settings.php?error=0" );
+	die();
 }
 
 include "../../connection/sleds_connect.php";

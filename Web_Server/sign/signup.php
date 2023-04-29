@@ -4,6 +4,8 @@
 	<link rel = "shortcut icon" href = "/sleds_favicon.ico" type = "image/x-icon" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel = "stylesheet" href = "./style/sign.css" >
+	<script src = "./script/ajax.js"></script>
+	<script src = "./script/script.js"></script>
 </head>
 <body>
 <section class="vh-100 bg-image signup_body">
@@ -20,28 +22,28 @@
 							?>
 							<form action = "sign.php" method = "post">
 								<div class="form-outline mb-4">
-									<input type="text" name="username" class="form-control form-control-lg" required
+									<input onkeyup="check_username( this )" type="text" id = "username" name="username" class="form-control form-control-lg" required
 									<?php if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 3 )
 										echo " placeholder = 'Username already in use' ";
 									?> />
 									<label class="form-label" for="username">Your Username</label>
 								</div>
 								<div class="form-outline mb-4">
-									<input type="email" name="email" class="form-control form-control-lg" required
+									<input onkeyup="check_email( this )" type="email" name="email" id = "email" class="form-control form-control-lg" required
 									<?php if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 2 )
 										echo " placeholder = 'Email already in use' ";
 									?> />
 									<label class="form-label" for="email">Your Email</label>
 								</div>
 								<div class="form-outline mb-4">
-									<input type="password" name="password" class="form-control form-control-lg" required
+									<input onkeyup="check_password_same()" type="password" id = "password" name="password" class="form-control form-control-lg" required
 									<?php if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 1 )
 										echo " placeholder = 'The passwords are not the same' ";
 									?> />
 									<label class="form-label" for="password">Password</label>
 								</div>
 								<div class="form-outline mb-4">
-									<input type="password" name="password_confirm" class="form-control form-control-lg" required
+									<input onkeyup="check_password_same()" type="password" id = "password_confirm" name="password_confirm" class="form-control form-control-lg" required
 									<?php if ( isset( $_GET[ "error" ] ) && $_GET[ "error" ] == 1 )
 										echo " placeholder = 'The passwords are not the same' ";
 									?> />
@@ -53,7 +55,7 @@
 									</label>
 								</div>-->
 								<div class="d-flex justify-content-center">
-									<button type="submit" class="btn btn-success btn-block btn-lg text-body sign_button">SignUp</button>
+									<button type="submit" id = "signup_button" class="btn btn-success btn-block btn-lg text-body sign_button">SignUp</button>
 								</div>
 								<p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="signin.php" class="fw-bold text-body"><u>Login here</u></a></p>	
 								<input type = "hidden" value = "1" name = "signup" >
