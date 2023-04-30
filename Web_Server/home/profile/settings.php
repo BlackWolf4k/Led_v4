@@ -26,9 +26,11 @@
 	<meta charset="UTF-8">
 	<title>Account Settings</title>
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="./style/style.css">
+	<script src = "./script/ajax.js"></script>
+	<script src = "./script/script.js"></script>
 </head>
 <body>
 	<section class="py-5 my-5">
@@ -73,16 +75,19 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>UserName</label>
-										<input name = "username" type="text" class="form-control" value="<?php echo $result[ "username" ]?> " >
+										<input onkeyup = "check_username( this )" id = "username" name = "username" type="text" class="form-control" value="<?php echo $result[ "username" ]?>" >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Email</label>
-										<input name = "email" type="text" class="form-control" value="<?php echo $result[ "email" ]?>" >
+										<input onkeyup = "check_email( this )" id = "email" name = "email" type="text" class="form-control" value="<?php echo $result[ "email" ]?>" >
 									</div>
 								</div>
 							</div>
+							<script>
+								save_original_data();
+							</script>
 							<div>
 								<button type = "submit" class="btn btn-primary">Update</button>
 								<button class="btn btn-light">Cancel</button>
@@ -105,13 +110,13 @@
 							<div class="col-md-6">
 								<div class="form-group">
 								  	<label>New password</label>
-								  	<input name = "new_password" type="password" class="form-control">
+								  	<input onkeyup = "check_password_same( this )" id = "password_" name = "new_password" type="password" class="form-control">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 								  	<label>Confirm new password</label>
-								  	<input name = "new_password_confirm" type="password" class="form-control">
+								  	<input onkeyup = "check_password_same( this )" id = "password_confirm" name = "new_password_confirm" type="password" class="form-control">
 								</div>
 							</div>
 						</div>
@@ -126,7 +131,7 @@
 						<h3 class="mb-4">Security Settings</h3>
 								<div class="form-group">
 								  	<label>Access Token</label>
-								  	<input name = "token" type="text" class="form-control" value = "<?php echo $result[ "token" ]?>">
+								  	<input name = "token" type="text" class="form-control" value = "<?php echo $result[ "token" ]?>" disabled>
 								</div>
 								<div class="form-group">
 									<form method = "post" action = "./change_settings.php">

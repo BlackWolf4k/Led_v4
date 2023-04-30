@@ -1,7 +1,6 @@
 <?php
-	// Check if a board is connecting or a normal client
-	// Check if a board is making a request
-	if ( isset( $_GET[ "board_id" ] ) && $_GET[ "board_id" ] != "" )
+	// Check if passing a token and a code ( means something is making a request )
+	if ( isset( $_GET[ "token" ] ) && isset( $_GET[ "code" ] ) )
 	{
 		// A board connected
 		include "./api/handler.php";

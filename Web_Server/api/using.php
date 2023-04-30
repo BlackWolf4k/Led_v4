@@ -27,6 +27,13 @@ if ( isset( $_GET[ "is_username_already_in_use" ] ) )
 // Check if asking for the email already used ( ajax )
 if ( isset( $_GET[ "is_email_already_in_use" ] ) )
 {
+	// Check if an email
+	if ( !filter_var( $_POST[ "email" ], FILTER_VALIDATE_EMAIL ) ) // If not an email return the "used" flag ( true )
+	{
+		echo "true";
+		die();
+	}
+
 	$statement = $sleds_database -> prepare( "SELECT email FROM user WHERE email LIKE ?" );
 	$statement -> bind_param( "s", $_GET[ "is_email_already_in_use" ] );
 	$statement -> execute();

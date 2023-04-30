@@ -1,6 +1,13 @@
 // Array where used elements sign if the are used ( 1 ) or not ( 0 )
 // Used to check if signup button can be enabled
 var used_elements = { "username" : 0, "email" : 0, "password" : 0 };
+var original_data = { "username" : "", "email" : "" };
+
+function save_original_data()
+{
+	original_data[ "username" ] = document.getElementById( "username" ).value;
+	original_data[ "email" ] = document.getElementById( "email" ).value;
+}
 
 function check_username( name )
 {
@@ -23,13 +30,12 @@ function check_username( name )
 				// Do not enable if some other var is wrong
 				for ( key in used_elements )
 				{
-					console.log( used_elements[ key ] );
 					if ( used_elements[ key ] == 1 )
 						return;
 				}
-				document.getElementById( "signup_button" ).disabled = false;
+				// document.getElementById( "signup_button" ).disabled = false;
 			}
-			else if ( this.responseText == "true" )
+			else if ( this.responseText == "true" && document.getElementById( "username" ).value != original_data[ "username" ] )
 			{
 				if ( document.getElementById( "username" ).classList.contains( "is-valid" ) )
 					document.getElementById( "username" ).classList.remove( "is-valid" );
@@ -39,7 +45,7 @@ function check_username( name )
 				used_elements[ "username" ] = 1;
 
 				// Disable the signup button
-				document.getElementById( "signup_button" ).disabled = true;
+				// document.getElementById( "signup_button" ).disabled = true;
 			}
 		}
 	};
@@ -70,13 +76,12 @@ function check_email( email )
 				// Do not enable if some other var is wrong
 				for ( key in used_elements )
 				{
-					console.log( key + used_elements[ key ] );
 					if ( used_elements[ key ] == 1 )
 						return;
 				}
-				document.getElementById( "signup_button" ).disabled = false;
+				// document.getElementById( "signup_button" ).disabled = false;
 			}
-			else if ( this.responseText == "true" )
+			else if ( this.responseText == "true" && document.getElementById( "email" ).value != original_data[ "email" ] )
 			{
 				if ( document.getElementById( "email" ).classList.contains( "is-valid" ) )
 					document.getElementById( "email" ).classList.remove( "is-valid" );
@@ -86,7 +91,7 @@ function check_email( email )
 				used_elements[ "email" ] = 1;
 
 				// Disable the signup button
-				document.getElementById( "signup_button" ).disabled = true;
+				// document.getElementById( "signup_button" ).disabled = true;
 			}
 		}
 	};

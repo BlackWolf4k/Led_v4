@@ -15,7 +15,7 @@
 		public $body;
 	}
 
-	function response_server_board()
+	function board_server_next_animation()
 	{
 		// Conntect to the database
 		include "connection/sleds_connect.php";
@@ -158,7 +158,7 @@
 		echo json_encode( get_object_vars( $animation ) );
 	}
 
-	function response_sync_board_server()
+	function board_server_send_sync()
 	{
 		// The values that a board asks to change
 		$sync_values = Array( "board_id", "leds", "token" );
@@ -203,7 +203,7 @@
 		// Should return the board changed informations?
 	}
 
-	/*function response_sync_board_server()
+	/*function board_server_send_sync()
 	{
 		// The values that a board asks to change
 		$sync_values = Array( "board_id", "leds", "group", "sub_playlist", "token" );
@@ -253,7 +253,7 @@
 		// Should return the board changed informations?
 	}*/
 
-	function response_server_board_specific_animation()
+	function board_server_specific_animation()
 	{
 		// Conntect to the database
 		include "connection/sleds_connect.php";
@@ -366,7 +366,7 @@
 		echo json_encode( get_object_vars( $animation ) );
 	}
 
-	function response_board_config()
+	function board_server_get_sync()
 	{
 		// Conntect to the database
 		include "connection/sleds_connect.php";
@@ -395,10 +395,10 @@
 	}
 
 	// Relatation array request-code -> response-function
-	$codes_responses = [
-		0x0001 => "response_server_board", // http://192.136.60.75:81/?code=1&board_id=1&token=f49140e28dd84b5e329fb33f02970cbe21bf6edb
-		0x0003 => "response_sync_board_server",
-		0x0005 => "response_server_board_specific_animation", //
-		0x0007 => "response_board_config" // http://192.136.60.75:81/?code=1&board_id=1&token=f49140e28dd84b5e329fb33f02970cbe21bf6edb
+	$board_server_codes = [
+		0x0001 => "board_server_next_animation",
+		0x0003 => "board_server_send_sync",
+		0x0005 => "board_server_specific_animation",
+		0x0007 => "board_server_get_sync"
 	];
 ?>

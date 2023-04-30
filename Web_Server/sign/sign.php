@@ -67,7 +67,7 @@
 
 		// Insert the user to the database
 		$statement = $sleds_database -> prepare( "INSERT INTO user ( email, username, password ) VALUES ( ?, ?, ? )" );
-		$password = password_hash( $_POST[ "password" ], PASSWORD_DEFAULT );
+		$password = password_hash( $_POST[ "password" ], PASSWORD_BCRYPT );
 		$statement -> bind_param( "sss", $_POST[ "email" ], $_POST[ "username" ], $password );
 		$statement -> execute();
 
@@ -93,7 +93,7 @@
 
 		// Check the user credentialities
 		$statement = $sleds_database -> prepare( "SELECT id, password FROM user WHERE username=?" );
-		$password = password_hash( $_POST[ "password" ], PASSWORD_DEFAULT );
+		$password = password_hash( $_POST[ "password" ], PASSWORD_BCRYPT );
 		$statement -> bind_param( "s", $_POST[ "username" ] );
 		$statement -> execute();
 		$result = $statement -> get_result();

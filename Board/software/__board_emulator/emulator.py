@@ -5,6 +5,7 @@ import time
 token = "648801b60d1395da07cb1cd506a5d64a83984455"
 board_id = "1"
 offline_animation_name = "Test_one"
+server_dns = "192.136.60.75:81"
 
 def log( text, status ):
 	# Normal
@@ -18,7 +19,7 @@ def log( text, status ):
 		print( Fore.RED + text + Fore.WHITE )
 
 def get_config():
-	content = requests.get( "http://192.136.60.75:81/?code=7&board_id=" + board_id + "&token=" + token )
+	content = requests.get( "http://" + server_dns + "/?code=7&board_id=" + board_id + "&token=" + token )
 
 	if content.status_code != 200:
 		log( "SOMETHING WRONG IN \"get_config\"", 2 )
@@ -28,7 +29,7 @@ def get_config():
 		print( content.text )
 
 def get_new_animation():
-	content = requests.get( "http://192.136.60.75:81/?code=1&board_id=" + board_id + "&token=" + token )
+	content = requests.get( "http://" + server_dns + "/?code=1&board_id=" + board_id + "&token=" + token )
 
 	if content.status_code != 200:
 		log( "SOMETHING WRONG IN \"get_new_animation\"", 2 )
@@ -38,7 +39,7 @@ def get_new_animation():
 		print( content.text )
 
 def get_offline_animation():
-	content = requests.get( "http://192.136.60.75:81/?code=1&board_id=" + board_id + "&animation_name=" + offline_animation_name + "&token=" + token )
+	content = requests.get( "http://" + server_dns + "/?code=5&board_id=" + board_id + "&animation_name=" + offline_animation_name + "&token=" + token )
 
 	if content.status_code != 200:
 		log( "SOMETHING WRONG IN \"get_offline_animation\"", 2 )

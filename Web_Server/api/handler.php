@@ -5,11 +5,23 @@
 		// Set the header content type as json
 		header( "Content-Type:application/json" );
 
+		// Include the responses files
+		include "board_server.php";
+		include "general.php";
+
 		// Check the values of the request
 		if ( !isset( $_GET[ "code" ] ) || !isset( $_GET[ "token" ] ) )
 		{
 			echo '{ "Error": "Invalid Code or Token" }';
 			// Not all values needed are found
+			die();
+		}
+
+		// Check that the code is rapresenting any request
+		if ( !is_in_array( $_GET[ "code" ], $board_server_codes ) && !is_in_array( $_GET[ "code" ], $general_codes ) ) // Code is wrong
+		{
+			// Return error json
+			echo '{ "Error": "Invalid Code" }';
 			die();
 		}
 
@@ -26,31 +38,37 @@
 		if ( mysqli_num_rows( $result ) <= 0 ) // Token is wrong
 		{
 			// Return error json
+			echo '{ "Error": "Invalid Token" }';
+			die();
+		}
+
+		// Get the user that is making the request
+		$user = $result -> fetch_assoc();
+
+		// Check if a general request
+		if ( is_in_array( $_GET[ "code" ], $general_codes ) )
+		{
+			// Make the general request
+			// The user id is passed in order to make less query to the database
+			$general_codes[ $_GET[ "code" ] ]( $user[ "id" ] );
+		}
+
+		// Check if the selected board is owned by this user
+		$statement = $sleds_database -> prepare( "SELECT * FROM light JOIN relation_user_cluster ON light.id_cluster=relation_user_cluster.id_cluster WHERE id_board=? AND relation_user_cluster.id_user=?" );
+		$statement -> bind_param( "ii", $_GET[ "board_id" ], $user[ "id" ] );
+		$statement -> execute();
+		$board_result = $statement -> get_result();
+
+		// Check if a board was found
+		if ( mysqli_num_rows( $board_result ) <= 0 ) // No board found
+		{
+			// Return error json
 			echo '{ "Error": "Invalid Code or Token" }';
 			die();
 		}
 
-		while ( $row = $result -> fetch_assoc() )
-		{
-			// Check if the selected board is owned by this user
-			$statement = $sleds_database -> prepare( "SELECT * FROM light JOIN relation_user_cluster ON light.id_cluster=relation_user_cluster.id_cluster WHERE id_board=? AND relation_user_cluster.id_user=?" );
-			$statement -> bind_param( "ii", $_GET[ "board_id" ], $row[ "id" ] );
-			$statement -> execute();
-			$board_result = $statement -> get_result();
-
-			// Check if a board was found
-			if ( mysqli_num_rows( $board_result ) <= 0 ) // No board found
-			{
-				// Return error json
-				echo '{ "Error": "Invalid Code or Token" }';
-				die();
-			}
-		}
-
-		include "responses.php";
-
 		// Decide what to respond
-		$codes_responses[ $_GET[ "code" ] ]();
+		$board_server_codes[ $_GET[ "code" ] ]();
 	}
 
 	// Make a request to the board
@@ -60,5 +78,14 @@
 
 		// Run the request function
 		$codes_requests[ $request_code ]();
+	}
+
+	// Custom in_array function
+	// Is it good enough?
+	function is_in_array( $key, $array )
+	{
+		if ( $array[ $key ] == null )
+			return false;
+		return true;
 	}
 ?>
