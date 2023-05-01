@@ -80,7 +80,7 @@ function create_strip()
 		"phases": "' + parseInt( document.getElementById( "phases_number_input" ).value ) + '",\
 		"delay": "' + parseInt( document.getElementById( "delay_input" ).value ) + '",\
 		"repetitions": "' + parseInt( document.getElementById( "repetitions_input" ).value ) + '",\
-		"name": "' + "prova" + '"\
+		"name": ""\
 	},	"body": [] \
 	}';
 

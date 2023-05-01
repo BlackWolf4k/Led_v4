@@ -6,7 +6,7 @@
 		-0: No animation passed
 		-1: Some values are wrong
 		-2: Pattern not found
-		-3: Body does not match phases
+		-3: Body does not match phasesfilter
 		-4: Wrong number of phases
 		-5: Wrong body
 		-6: Wrong filename
@@ -18,14 +18,17 @@
 		die();
 	}
 
-	if ( !isset( $_POST[ "animation" ] ) )
+	if ( !isset( $_SESSION[ "animation" ] ) )
 	{
 		header( "Location: /home/animation_editor/home.php?error=0" );
 		die();
 	}
 
 	// Decode the animation json as associative array
-	$animation = json_decode( $_POST[ "animation" ], true );
+	$animation = json_decode( $_SESSION[ "animation" ], true );
+
+	// Delete the animation from the session
+	unset( $_SESSION[ "animation" ] );
 
 	// Check that the animation data are all correct
 	check_animation( $animation );

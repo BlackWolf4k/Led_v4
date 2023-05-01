@@ -155,7 +155,22 @@
 
 		// Return the json containing the response
 		// var_dump( get_object_vars( $animation ) );
+		// echo json_encode( get_object_vars( $animation ) );
+
+		// Print the json
+		echo '{ "Content": [';
+
+		// Convert the result to json and print it
+		$board_config = $result -> fetch_assoc();
 		echo json_encode( get_object_vars( $animation ) );
+	
+		echo ",";
+	
+		to_notify();
+	
+		echo "]}";
+	
+		die();
 	}
 
 	function board_server_send_sync()
@@ -201,6 +216,18 @@
 		$statement -> execute();
 
 		// Should return the board changed informations?
+
+		// Return the asking json
+		echo '{ "Content": [';
+	
+		to_notify();
+	
+		echo "]}";
+
+		// Check if the board was responding to something
+		is_responding();
+	
+		die();
 	}
 
 	/*function board_server_send_sync()
@@ -363,7 +390,22 @@
 
 		// Return the json containing the response
 		// var_dump( get_object_vars( $animation ) );
+		//echo json_encode( get_object_vars( $animation ) );
+
+		// Print the json
+		echo '{ "Content": [';
+
+		// Convert the result to json and print it
+		$board_config = $result -> fetch_assoc();
 		echo json_encode( get_object_vars( $animation ) );
+
+		echo ",";
+
+		to_notify();
+
+		echo "]}";
+
+		die();
 	}
 
 	function board_server_get_sync()
@@ -387,9 +429,19 @@
 		}
 		else
 		{
+			// Print the json
+			echo '{ "Content": [';
+
 			// Convert the result to json and print it
 			$board_config = $result -> fetch_assoc();
 			echo json_encode( $board_config );
+
+			echo ",";
+
+			to_notify();
+
+			echo "]}";
+
 			die();
 		}
 	}
@@ -401,4 +453,67 @@
 		0x0005 => "board_server_specific_animation",
 		0x0007 => "board_server_get_sync"
 	];
+
+	function to_notify()
+	{
+		// Conntect to the database
+		include "connection/sleds_connect.php";
+
+		// Get the boards that need to be notified
+		$statement = $sleds_database -> prepare( "SELECT board.id, board.notify FROM board JOIN light ON board.id=light.id_board WHERE light.id_cluster IN ( SELECT light.id_cluster FROM light WHERE light.id_board=? ) AND board.notify != 0" );
+		$statement -> bind_param( "i", $_GET[ "board_id" ] );
+		$statement -> execute();
+		$result = $statement -> get_result();
+
+		if ( mysqli_num_rows( $result ) <= 0 )
+			return;
+
+		// Print the json
+		echo '{ "Asking": [';
+		for ( $i = 0; $i < ( mysqli_num_rows( $result ) ); $i++ )
+		{
+			$board = $result -> fetch_assoc();
+
+			echo '{ "Code": "' . $board[ "notify" ] . '", "Board": "' . $board[ "id" ] . '"}';
+
+			if ( $i < mysqli_num_rows( $result ) - 1 )
+				echo ",";
+		}
+		echo "]}";
+	}
+
+	function is_responding()
+	{
+		// Check if the "responding" paramter is set
+		if ( isset( $_GET[ "responding" ] ) )
+		{
+			// Check if the code that the server asked
+			$statement = $sleds_database -> prepare( "SELECT board.id FROM board WHERE board.id=? AND board.notify=?" );
+			$statement -> bind_param( "ii", $_GET[ "board_id" ], $_GET[ "responding" ] );
+			$statement -> execute();
+			$result = $statement -> get_result();
+
+			// Check if actualy responding to the wrigth message
+			if ( mysqli_num_rows( $result ) <= 0 ) // The board was not responding to the correct message
+			{
+				// Ignore the parameter
+				return;
+			}
+
+			// The board was responding to what asked
+			// Change the notify status to 0 ( nothing to notify )
+			$statement = $sleds_database -> prepare( "UPDATE board SET board.notify=0 WHERE board.id=?" );
+			$statement -> bind_param( "i", $_GET[ "board_id" ] );
+			$statement -> execute();
+		}
+	}
+
+	// Custom in_array function
+	// Is it good enough?
+	function is_in_array( $key, $array )
+	{
+		if ( $array[ $key ] == null )
+			return false;
+		return true;
+	}
 ?>

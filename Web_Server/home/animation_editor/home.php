@@ -104,12 +104,9 @@
 			<hr style = "background-color:black;">
 			<div class = "row" >
 					<div class = "col" >
-						<input class="form-control" type = "text" id = "animation_name" />
-					</div>
-					<div class = "col-s" >
-						<form action = "./upload_animation.php" method = "post" >
+						<form action = "./save.php" method = "post" >
 							<input type = "hidden" value = "1" name = "animation" id = "animation_body_post" >
-							<button class="btn btn-primary btn-block mb-4" onclick = "save_animation()" id = "button_save_animation" type = "submit" >Save</button>
+							<button class="btn btn-primary btn-block" onclick = "save_animation()" id = "button_save_animation" type = "submit" >Save</button>
 						</form>
 					</div>
 				</div>
