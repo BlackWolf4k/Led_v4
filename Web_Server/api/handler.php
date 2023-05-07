@@ -82,10 +82,10 @@
 
 	// Custom in_array function
 	// Is it good enough?
-	function is_in_array( $key, $array )
+	/*function is_in_array( $key, $array )
 	{
 		if ( $array[ $key ] == null )
 			return false;
 		return true;
-	}
+	}*/
 ?>

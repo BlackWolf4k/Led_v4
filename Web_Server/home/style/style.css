@@ -1,4 +1,35 @@
-.lights_table
+button
+{
+	border-style: none;
+}
+
+.lights_tables
 {
 	margin: 5%;
+}
+
+.table_hide_show
+{
+	display: block;
+	width: 100%;
+	border: none;
+	background-color: #F0F0F0;
+	padding: 14px 28px;
+	font-size: 16px;
+}
+
+.hide_show_text
+{
+	font-weight: bold;
+}
+
+.hide_show
+{
+	float: right;
+}
+
+.hide_show_button
+{
+	background-color: #F0F0F0;
+	border-style: none;
 }

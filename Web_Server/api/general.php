@@ -83,9 +83,42 @@ function general_get_animations_of_sub_playlist( $user_id )
 	die();
 }
 
+function general_get_groups( $user_id )
+{
+	include "connection/sleds_connect.php";
+
+	// Request for all the groups of the user
+	$statement = $sleds_database -> prepare( "SELECT cluster.id, cluster.name FROM cluster JOIN relation_user_cluster ON relation_user_cluster.id_cluster=cluster.id WHERE relation_user_cluster.id_user=?" );
+	$statement -> bind_param( "i", $user_id );
+	$statement -> execute();
+	$result = $statement -> get_result();
+
+	if ( mysqli_num_rows( $result ) <= 0 )
+	{
+		echo '{ "Error" : "Nothing Found" }';
+		die();
+	}
+
+	// Print the result with a json format
+	echo '{ "groups" : [';
+	
+	for ( $i = 0; $i < mysqli_num_rows( $result ); $i++ )
+	{
+		echo json_encode( $result -> fetch_assoc() );
+		
+		if ( $i < mysqli_num_rows( $result ) - 1 )
+			echo ",";
+	}
+
+	echo "]}";
+
+	die();
+}
+
 // Relatation array request-code -> response-function
 $general_codes = [
 	0x2001 => "general_get_sub_playlists",
-	0x2003 => "general_get_animations_of_sub_playlist"
+	0x2003 => "general_get_animations_of_sub_playlist",
+	0x2005 => "general_get_groups"
 ];
 ?>

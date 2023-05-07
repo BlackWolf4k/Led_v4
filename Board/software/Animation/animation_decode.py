@@ -13,4 +13,4 @@ def decode_animation( animation ):
 	dict_animation = json.loads( animation )
 	
 	# Return the animation
-	return dict_animation
+	return dict_animation[ "Content" ][ 0 ]

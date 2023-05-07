@@ -17,11 +17,20 @@
 	}
 	else // Everything is setted
 	{
+		// The url for future request
+		$this_server_url = "127.0.0.1:81";
+
 		// Connect to the database
 		include "../../connection/sleds_connect.php";
 
+		// Get the user token to use it to get informations about the light
+		$statement = $sleds_database -> prepare( "SELECT token FROM user WHERE user.id=?" );
+		$statement -> bind_param( "i", $_SESSION[ "user_id" ] );
+		$statement -> execute();
+		$user_token = ( ( $statement -> get_result() ) -> fetch_assoc() )[ "token" ];
+
 		// Get light and board informations
-		$statement = $sleds_database -> prepare( "SELECT light.name, light.id_sub_playlist, board.leds_number, light.id_animation FROM light JOIN board ON light.id_board=board.id WHERE light.id=?" );
+		$statement = $sleds_database -> prepare( "SELECT light.name, light.id_sub_playlist, board.leds_number, light.id_animation, light.id_cluster FROM light JOIN board ON light.id_board=board.id WHERE light.id=?" );
 		$statement -> bind_param( "i", $_GET[ "light_id" ] );
 		$statement -> execute();
 		$light_result = $statement -> get_result();
@@ -57,19 +66,33 @@
 				</div>
 				<div class="form-outline mb-4">
 					<label class="form-label" for="group">Group</label>
-					<select type="number" id="group" class="form-control" value = "Group" onchange = "change_sub_playlists( this.value )">
+					<select type="number" id="group" class="form-control" value = "Group" onchange = "change_sub_playlists( this.value, <?php echo $user_token; ?> )">
 					<option disabled selected value></option>
 					<?php
-					// Get all the groups
-					$statement = $sleds_database -> prepare( "SELECT * FROM cluster RIGHT JOIN relation_user_cluster ON relation_user_cluster.id_cluster=cluster.id WHERE relation_user_cluster.id_user=?" );
-					$statement -> bind_param( "i", $_SESSION[ "user_id" ] );
-					$statement -> execute();
-					$group_result = $statement -> get_result();
+						// Make a request using the general requests
+						$curl = curl_init();
 
-					while ( $group = $group_result -> fetch_assoc() )
-						echo '
-						<option value="' . $group[ "id" ]. '">' . $group[ "name" ] . '</option>
-						';
+						$url = sprintf( "http://%s/?code=%s&token=%s", $this_server_url, "8197", $user_token );
+
+						curl_setopt( $curl, CURLOPT_URL, $url );
+						curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+
+						$result = curl_exec( $curl );
+
+						$result = json_decode( $result, true );
+
+						for ( $i = 0; $i < count( $result[ "groups" ] ); $i++ )
+						{
+							if ( $result[ "groups" ][ $i ][ "id" ] == $light_result[ "id_cluster" ] )
+							{
+								echo "<option selected>" . $result[ "groups" ][ $i ][ "name" ] . "</option>";
+
+								// Call the script to load the subplaylist of the group
+								echo "<script>change_sub_playlists(" . $light_result[ "id_cluster" ] . ", " . $user_token . ")</script>";
+							}
+							else
+								echo "<option>" . $result[ "groups" ][ $i ][ "name" ] . "</option>";
+						}
 					?>
 					</select>
 				</div>
