@@ -1,5 +1,5 @@
 <?php
-	session_save_path( "/var/www/sessions" ); // remove this in other servers
+	// session_save_path( "/var/www/sessions" ); // remove this in other servers
 	session_start();
 
 	// SELECT DISTINCT * FROM light RIGHT JOIN board ON light.id_board=board.id RIGHT JOIN cluster ON light.id_cluster=cluster.id RIGHT JOIN sub_playlist ON light.id_sub_playlist = sub_playlist.id;

@@ -8,12 +8,19 @@ from Server import interpreter
 
 # To read pages
 from File import read
-
 # To dump content
 from File import write
-
 # To update config files
 from File import update
+
+# To sync data with the main server
+from Services import requests
+
+# To require the animation
+from Animation import animation
+
+# To handle json
+import json
 
 socket_descriptor = 0
 
@@ -50,19 +57,27 @@ def main():
 			request = client_connection.recv( 1024 )
 
 			# Analize the request
-			response_filename = analize_request( request )
+			analyzed_request = analize_request( request[ "demands" ] )
 
-			# Get the content of the page
-			response = interpreter.interpreter( response_filename )
+			# Check if broadcast message
+			if ( analyzed_request[ "broadcast" ] == 1 ):
+				# Handle the message
+				handle_broadcast_message( analyzed_request[ "demands" ] )
 
-			# Send html response header
-			client_connection.send( "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" )
+				# Close the connection
+				client_connection.close()
+			else:
+				# Get the content of the page
+				response = interpreter.interpreter( response_filename )
 
-			# Send the response
-			client_connection.send( response )
+				# Send html response header
+				client_connection.send( "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" )
 
-			# Close the connection
-			client_connection.close()
+				# Send the response
+				client_connection.send( response )
+
+				# Close the connection
+				client_connection.close()
 
 		except OSError as error: # Except a error
 			# Close the connection with the client
@@ -72,15 +87,26 @@ def main():
 # Decide what to respond to a request
 # ARGUMENTS ( string ):
 #	-request: the request wich to find a response
-# RETURNS ( string ):
-#	-filename: the name of the response file
+# RETURNS ( dict ):
+#	-analyzed_request: by now can return two different results:
+#		{ "broadcast": 1, "demands": {} }: in this case the request recived by the server is just a message from another board broadcasting server demands
+#		{ "broadcast": 0, "filename": "" }: in this casse the request recived is a http request to this server
 def analize_request( request ):
+	# Check if a broadcast message ( first becouse more common )
+	response = is_broacast( request )
+
+	if ( response != False ): # A broadcast message
+		return response # Return the message
+	
+	response = { "broadcast": 0, "filename": {} }
+
 	# Get the request path
 	path = get_path( request )
 
 	# Check that the path was interpreted correctly
 	if path == 0:
-		return "error.html" # Return the error page
+		response[ "filename" ] = "error.html"
+		return response # Return error page
 
 	print( path )
 	print( str( request ) )
@@ -104,15 +130,18 @@ def analize_request( request ):
 			# Check that there is a code
 			if "code" not in found_paramters:
 				# Return error page
-				return "error.html"
+				response[ "filename" ] = "error.html"
+				return response
 
 			# Check that the code's code exists
 			if str( found_paramters[ "code" ] ) not in codes:
 				# Return error page
-				return "error.html"
+				response[ "filename" ] = "error.html"
+				return response
 
 			# Interpretate the code
-			return codes[ str( found_paramters[ "code" ] ) ]( parameters )
+			response[ "filename" ] = codes[ str( found_paramters[ "code" ] ) ]( parameters )
+			return response
 
 	# Check if asking just a page
 	# Get all the pages
@@ -121,10 +150,33 @@ def analize_request( request ):
 	# Check if the request contains a page
 	for page in pages:
 		if ( page in path ): # Check if page contained
-			return page # Return the page
+			response[ "filename" ] = page
+			return response # Return the page
 	
 	# No code or page request found so return the index
-	return "index.html" # Return the index page
+	response[ "filename" ] = "index.html"
+	return response
+
+# Check if a this message is a broadcast message
+def is_broacast( request ):
+	# Decode the request ( from byte[] to string )
+	request = request.decode( "utf-8" )
+
+	# The things that must be in a broadcast message must be: "Asking", "Code" and "Board"
+	if ( "Asking" in request and "Code" in request and "Board" in request ):
+		# Create what to return
+		response = { "broadcast": 1, "demands": {} }
+
+		# Load the server demands
+		try: # Some data passed can be not nice for json loading
+			response[ "demands" ] = json.loads( request )
+		except Exception:
+			response[ "demands" ] = json.loads( request.replace( "'", "\"" ) )
+		
+		# Return the response
+		return response
+
+	return False
 
 # List the webpages
 # ARGUMENTS ():
@@ -158,6 +210,16 @@ def get_path( request ):
 		return path
 	except Exception:
 		return 0
+
+# Handle a recived broadcast message
+# If the board id specified in the request if the same of this board the message will be interpreted, otherwise will be dropped
+def handle_broadcast_message( demands ):
+	# Read this board configuration
+	board_config = read.read_conf_file( "board.json" )
+
+	# Compare the board id
+	if ( demands[ "Board" ] == board_config[ "board_id" ] ):
+		requests_codes[ int( demands[ "Code" ] ) ]()
 
 # Get the parameters from the request
 # ARGUMENTS ( string ):
@@ -216,7 +278,18 @@ def update_config( parameters ):
 	# Check the values passed
 
 	# Update the config file
-	update.update_config_file( "board.json", parameters )
+	changed_keys = update.update_config_file( "board.json", parameters )
+
+	# Sync the new config with the main server
+	board_server_send_sync()
+
+	# If he animation has changed require it
+	if "actual_animation" in changed_keys:
+		requests.board_server_specific_animation()
+
+	# If the default animation has changed require it
+	if "remote_animation" in changed_keys:
+		animation.set_default_animation( requests.board_server_specific_animation( True ) )
 
 	# Return the index page
 	return "index.html"

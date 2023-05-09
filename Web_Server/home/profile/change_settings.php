@@ -1,5 +1,5 @@
 <?php
-session_save_path( "/var/www/sessions" ); // remove this in other servers
+// session_save_path( "/var/www/sessions" ); // remove this in other servers
 session_start();
 
 /*

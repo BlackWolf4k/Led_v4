@@ -3,7 +3,7 @@
 	"leds_number": 10,
 	"broadcast_port": 1233,
 	"leds_pin": 1,
-	"token": "f49140e28dd84b5e329fb33f02970cbe21bf6edb",
+	"token": "e7f361164e28f51e24cec1bd7650886c1e8dbaeb",
 	"actual_animation": "Rainbow",
 	"remote_animation": "Purple"
 }

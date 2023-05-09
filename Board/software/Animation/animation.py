@@ -4,6 +4,9 @@ import Animation.animation_decode as animation_decode
 # Make the get request
 from Services import requests
 
+# To write animation
+from File import write
+
 play = 1
 
 # Ask an animation to the server
@@ -13,7 +16,7 @@ play = 1
 #	-dict: the animation
 def get_animation():
 	# Require the new animation
-	response = requests.board_server()
+	response = requests.board_server_next_animation()
 
 	# Check the returned value
 	if ( response == b'{}' or response == 0 ):
@@ -40,7 +43,7 @@ def play_animation( animation ):
 def play_animation_mock( animation ):
 	global play
 
-	# Change the play global variable ( changed by the server process if the master calls a stop )
+	# Change the play global variable
 	play = 1
 
 	# Check that the server isn't interrupting
@@ -56,3 +59,12 @@ def play_animation_mock( animation ):
 			for j in range( 0, animation[ "descriptor" ][ "leds" ], 1 ):
 				# Print the colors of the leds
 				print( "Phase: " + str( i ) + ", Led: " + str( j ) + ", Color: [" + str( animation[ "body" ][ i ][ j ][ 0 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 1 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 2 ] ) + "]" )
+	# Playing ended
+
+	# Change the global variable
+	play = 0
+
+# Get the default animation from the main server and stores it in local
+def set_default_animation( animation ):
+	# Store the animation
+	write.write_default_animation( animation )

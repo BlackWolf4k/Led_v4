@@ -1,6 +1,6 @@
 {
 	"protocol": "http://",
-	"dns": "172.20.10.10",
+	"dns": "sleds.com",
 	"path": "/",
-	"port": 81
+	"port": 80
 }

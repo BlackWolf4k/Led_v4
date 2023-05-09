@@ -1,5 +1,5 @@
 <?php
-	session_save_path( "/var/www/sessions" ); // remove this in other servers
+	// session_save_path( "/var/www/sessions" ); // remove this in other servers
 	session_start();
 
 	// Check that the needed variables are setted
@@ -68,8 +68,11 @@
 					<label class="form-label" for="group">Group</label>
 					<select type="number" id="group" class="form-control" value = "Group" onchange = "change_sub_playlists( this.value, <?php echo $user_token; ?> )">
 					<option disabled selected value></option>
+					<script>
+						load_groups( "<?php echo $user_token ?>" );
+					</script>
 					<?php
-						// Make a request using the general requests
+						/*// Make a request using the general requests
 						$curl = curl_init();
 
 						$url = sprintf( "http://%s/?code=%s&token=%s", $this_server_url, "8197", $user_token );
@@ -92,7 +95,7 @@
 							}
 							else
 								echo "<option>" . $result[ "groups" ][ $i ][ "name" ] . "</option>";
-						}
+						}*/
 					?>
 					</select>
 				</div>

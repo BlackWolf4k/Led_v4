@@ -7,19 +7,19 @@ from File import read, write
 # ARGUMENTS ( string, dict ):
 #	-filename: the name of the config file
 #	-data: the data to write to the file
-# RETURNS ( int )
+# RETURNS ( int, arr )
 #	-0: error code
-#	-1: success code
-#	-2: some keys were not written
+#	-[]: the data changed
 def update_config_file( filename, data ):
-	code = 1
-
 	# Read the content of the file
 	content = read.read_conf_file( filename )
 
 	# Check that a file was opened
 	if ( content == 0 ):
 		return 0 # No content in the file or no file
+
+	# The key that have been changed
+	changed_keys = []
 
 	# Open the file
 	with open( "/Config/" + filename, "r" ) as file:
@@ -29,10 +29,10 @@ def update_config_file( filename, data ):
 			if ( key in list( content.keys() ) ):
 				# Change the value
 				content[ key ] = data[ key ]
-			else: # The key is not in the file
-				code = 2 # Return the error to the user
+				# Store that this key has been changed
+				changed_keys.append( key )
 	
 	# Write the file
 	write.write_conf_file( filename, content )
 
-	return code
+	return changed_keys
