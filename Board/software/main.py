@@ -22,12 +22,17 @@ if __name__ == "__main__":
 
 	print( connection.wlan.ifconfig() )
 
+	#animation_thread = _thread.start_new_thread( animation.get_animation, () )
+
+	# Configure the leds
+	animation.leds_init()
+
 	# Configure the webserver
 	server_main.init()
 	#server_main.main()
 
 	# Start the web server
-	server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
+	#server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
 
 	# Get the animation
 	animation_ = animation.get_animation()

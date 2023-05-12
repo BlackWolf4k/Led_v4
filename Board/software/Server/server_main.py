@@ -24,6 +24,31 @@ import json
 
 socket_descriptor = 0
 
+# Spacial characters in the url of a HTTP request
+http_special_characters = {
+	"&": "%26",
+	"<": "%3C",
+	">": "%3E",
+	"\"": "%22",
+	"'": "%27",
+	"/": "%2F",
+	"\\": "%5C",
+	"{": "%7B",
+	"}": "%7D",
+	"(": "%28",
+	")": "%29",
+	"[": "%5B",
+	"]": "%5D",
+	"=": "%3D",
+	"?": "%3F",
+	":": "%3A",
+	";": "%3B",
+	"@": "%40",
+	"$": "%24",
+	"#": "%23",
+	"!": "%21"
+}
+
 # Initialize the webserver
 def init():
 	global socket_descriptor
@@ -56,8 +81,11 @@ def main():
 			# Recive the request
 			request = client_connection.recv( 1024 )
 
+			# Decode the request ( from byte[] to string )
+			request = request.decode( "utf-8" )
+
 			# Analize the request
-			analyzed_request = analize_request( request[ "demands" ] )
+			analyzed_request = analize_request( request )
 
 			# Check if broadcast message
 			if ( analyzed_request[ "broadcast" ] == 1 ):
@@ -68,7 +96,7 @@ def main():
 				client_connection.close()
 			else:
 				# Get the content of the page
-				response = interpreter.interpreter( response_filename )
+				response = interpreter.interpreter( analyzed_request[ "filename" ] )
 
 				# Send html response header
 				client_connection.send( "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" )
@@ -159,18 +187,19 @@ def analize_request( request ):
 
 # Check if a this message is a broadcast message
 def is_broacast( request ):
-	# Decode the request ( from byte[] to string )
-	request = request.decode( "utf-8" )
-
 	# The things that must be in a broadcast message must be: "Asking", "Code" and "Board"
 	if ( "Asking" in request and "Code" in request and "Board" in request ):
 		# Create what to return
 		response = { "broadcast": 1, "demands": {} }
 
+		# Get the path of the request
+		request = get_path( request )
+
 		# Load the server demands
 		try: # Some data passed can be not nice for json loading
 			response[ "demands" ] = json.loads( request )
 		except Exception:
+			print( request.replace( "'", "\"" ) )
 			response[ "demands" ] = json.loads( request.replace( "'", "\"" ) )
 		
 		# Return the response
@@ -189,6 +218,21 @@ def list_pages():
 	# Return the pages
 	return pages
 
+# Decode a http request url ( replace the special characters back to normality )
+# ARGUMENTS ( byte[] ):
+#	-request: the http request
+# RETURNS ( string | int ):
+#	-url: the decoded url
+#	-0: error code
+def decode_url( request ):
+	decoded_url = request
+
+	# Replace all the elements
+	for decoded in list( http_special_characters.keys() ):
+		decoded_url = decoded_url.replace( http_special_characters[ decoded ], decoded )
+
+	return decoded_url
+
 # Returns the path requested in a HTTP request
 # ARGUMENTS ( byte[] ):
 #	-request: the http request
@@ -196,8 +240,8 @@ def list_pages():
 #	-path: the request path
 #	-0: error code
 def get_path( request ):
-	# Decode the request ( from byte[] to string )
-	request = request.decode( "utf-8" )
+	# Decode the url request special values
+	request = decode_url( request )
 
 	try:
 		# Get the first line of the request ( delimited by '\r\n' )

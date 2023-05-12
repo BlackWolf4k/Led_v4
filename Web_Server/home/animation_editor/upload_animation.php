@@ -18,7 +18,8 @@
 		die();
 	}
 
-	if ( !isset( $_SESSION[ "animation" ] ) )
+	// Check that all the animation values needed are setted
+	if ( !isset( $_SESSION[ "animation" ] ) || !isset( $_POST[ "animation_name" ] ) || !isset( $_POST[ "animation_sub_playlist" ] ) )
 	{
 		header( "Location: /home/animation_editor/home.php?error=0" );
 		die();

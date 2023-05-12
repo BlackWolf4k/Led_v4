@@ -1,0 +1,34 @@
+.head
+{
+	padding: 15%;
+	background-image: url( "/images/sleds_logo_big.png" );
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.sub_head
+{
+	padding: 5%;
+}
+
+.boxes
+{
+	padding-top: 2.5%;
+	padding-bottom: 5%;
+}
+
+.dress_box
+{
+	background-image: url( "" );
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.box_one
+{
+	background-image: url( "" );
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}

@@ -1,0 +1,25 @@
+.text_white
+{
+	color: white;
+}
+
+.text_purple
+{
+	color: rgb( 255, 0, 255 );
+}
+
+.back_purple
+{
+	background-color: rgb( 255, 0, 255 );
+}
+
+.text_big
+{
+	font-size: 60px;
+}
+
+.text_bigger
+{
+	font-size: 100px;
+	font-weight: bold;
+}

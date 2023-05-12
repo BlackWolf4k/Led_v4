@@ -53,7 +53,7 @@ def board_server_specific_animation( default = False ):
 	# Is the animation to get the ofline or the online
 	if default:
 		default = "remote_animation"
-	else
+	else:
 		default = "actual_animation"
 
 	# Make the request
