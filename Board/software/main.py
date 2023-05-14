@@ -1,8 +1,13 @@
 # Import needed standard libraries
-import _thread
+# import _thread
 
-# Import needed libraries
+# To connect to wifi
 from Connections import connection
+
+# To make access point
+from Connections import access_point
+
+# To get and play animations
 import Animation.animation as animation
 
 # To run the webserver
@@ -14,43 +19,90 @@ from File import write
 # To update config file
 from File import update
 
+# To initialize the leds
+from Led import led
+
+# To read the value of the access point button
+from Button import button
+
+# For connection
+
+# Initalize all the components that need to be initialized
+# Checks if the ap button is pressed
+# RETURNS ( bool ):
+#	-True: server mode
+#	-False: client mode
+def early_main():
+	# Initialize the button
+	button.init()
+
+	# Configure the debug leds
+	led.init_debug()
+
+	# Check the value of the access point button
+	if ( button.read_button() ): # Pressed
+		# If the buttton is pressed start the server
+		# Initialize the access point
+		access_point.init()
+
+		# Configure the server
+		server_main.init()
+
+		# Return True indicating to start server
+		return True
+	else:
+		# If the button is not pressed play animations
+		# Initialize the connection to the wifi
+		connection.init()
+
+		# Configure the leds
+		led.init_strip()
+
+		# Return False to indicate client
+		return False
+
 # Main function
 if __name__ == "__main__":
-	# Connect to the wifi
-	connection.init()
-	status = connection.connect()
+	# Start the early main
+	is_server = early_main()
 
-	print( connection.wlan.ifconfig() )
+	# Based of the early main values decide if to run the web server of the animation player
+	if ( is_server ): # Is server
+		# Start the access point
+		access_point.start()
 
-	#animation_thread = _thread.start_new_thread( animation.get_animation, () )
+		# Run the web server
+		try:
+			server_main.main()
+		except Exception as exception: # Proably a socket exception
+			print( exception )
 
-	# Configure the leds
-	animation.leds_init()
+			# Go in error state
+			led.error()
+	else:
+		connection_status = connection.try_secure_connection()
 
-	# Configure the webserver
-	server_main.init()
-	#server_main.main()
+		# Check if realy connected
+		if ( connection_status == 0 ): # Not realy connected
+			# Play offline animation
+			print( "Play offline" )
+			# animation.set_default_animation()
+		else:
+			# Play animations in loop
+			while True:
+				try:
+					# Get the animation
+					animation_ = animation.get_animation()
 
-	# Start the web server
-	#server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core
+					# Play the animation
+					animation.play_animation( animation_ )
+				except Exception as exception: # Proably a timeout exception
+					#print( exception )
 
-	# Get the animation
-	animation_ = animation.get_animation()
+					# Go in error state and turn off the strip
+					led.error( True )
 
-	# Update the name of the actual animation
-	#update.update_config_file( "board.json", { "actual_animation" : animation_[ "descriptor" ][ "name" ] } )
+		# If comes here probably not connected and the deault animation ended
+		led.error( True )
 
-	# Dump the animation
-	#write.dump_json( animation_ )
-
-	#print( connection.wlan.ifconfig() )
-
-	animation.play_animation( animation_ )
-
-	print( "Ended" )
-
-
-	# If connection fails play offline animation
-	#if ( status == 0 )
-	# Start the local server
-	#local_server_thread = _thread.start_new_thread( start_local_server, () ) # Server is started on the second core
+#server_thread = _thread.start_new_thread( server_main.main, () ) # Server is started on the second core

@@ -17,7 +17,12 @@ def __index_interpreter():
 	board_config = read.read_conf_file( "board.json" )
 
 	# Changhe the %() values
-	content = content % ( int( board_config[ "leds_number" ] ), int( board_config[ "leds_pin" ] ), board_config[ "actual_animation" ], board_config[ "remote_animation" ] )
+	#content = content % ( board_config[ "board_name" ], int( board_config[ "leds_number" ] ), board_config[ "actual_animation" ], board_config[ "remote_animation" ] )
+	print ( board_config[ "board_name" ] )
+	content = content.replace( "__board_name__", str( board_config[ "board_name" ] ) )
+	content = content.replace( "__leds_number__", str( board_config[ "leds_number" ] ) )
+	content = content.replace( "__actual_animation__", board_config[ "actual_animation" ] )
+	content = content.replace( "__remote_animation__", board_config[ "remote_animation" ] )
 
 	# Return the interpreted content
 	return content
@@ -36,7 +41,7 @@ def __error_interpreter():
 
 def __token_interpreter():
 	# Read the page
-	content = read.read_file( "/Server/pages/token_page.html" )
+	content = read.read_file( "/Server/pages/token.html" )
 
 	# Decode the content
 	content.decode( "utf-8" )
@@ -53,7 +58,7 @@ def __token_interpreter():
 interpreters = {
 	"index.html": __index_interpreter,
 	"error.html": __error_interpreter,
-	"token_page.html": __token_interpreter
+	"token.html": __token_interpreter
 }
 
 # Interpretates a page

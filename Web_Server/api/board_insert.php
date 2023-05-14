@@ -1,10 +1,8 @@
 <?php
-function insert_new_board( $board_code, $user_id )
+function check_new_board( $board_code, $user_id )
 {
 	if ( $board_code != "" )
 	{
-		error_reporting(E_ALL);
-		ini_set('display_errors', '1');
 		// Connect to the database of production
 		include "connection/sleds_production_connect.php";
 		include "connection/sleds_connect.php";
@@ -47,25 +45,43 @@ function insert_new_board( $board_code, $user_id )
 		// Store the id of the first cluster
 		$first_cluster_id = ( $result -> fetch_assoc() )[ "id_cluster" ];
 
-		// Get the user first cluster
-		$statement = $sleds_database -> prepare( "SELECT id_cluster FROM relation_user_cluster WHERE id_user=?" );
+		// Get the user first sub playlist
+		$statement = $sleds_database -> prepare( "SELECT sub_playlist.id FROM sub_playlist WHERE sub_playlist.id_playlist IN ( SELECT playlist.id FROM playlist JOIN relation_user_cluster ON relation_user_cluster.id_cluster=playlist.id_cluster WHERE relation_user_cluster.id_user=? )" );
 		$statement -> bind_param( "i", $user_id );
 		$statement -> execute();
 		$result = $statement -> get_result();
 
-		// Check that the user has clusters
+		// Check that the user has sub playlists
 		if ( mysqli_num_rows( $result ) <= 0 )
 		{
-			echo '{ "Error": "User has no groups" }';
+			echo '{ "Error": "User has no playlists" }';
 			die();
 		}
 
-		// Store the id of the first cluster
-		$first_cluster_id = ( $result -> fetch_assoc() )[ "id_cluster" ];
+		// Store the id of the first sub playlist
+		$first_sub_playlist_id = ( $result -> fetch_assoc() )[ "id" ];
+
+		// Get the user first animation of the first sub playlist
+		$statement = $sleds_database -> prepare( "SELECT relation_animation_sub_playlist.id_animation FROM relation_animation_sub_playlist WHERE relation_animation_sub_playlist.id_sub_playlist=?" );
+		$statement -> bind_param( "i", $first_sub_playlist_id );
+		$statement -> execute();
+		$result = $statement -> get_result();
+
+		// Check that the user has animations
+		if ( mysqli_num_rows( $result ) <= 0 )
+		{
+			echo '{ "Error": "User has no animations" }';
+			die();
+		}
+
+		// Store the id of the first animation
+		$first_animation_id = ( $result -> fetch_assoc() )[ "id_animation" ];
 
 		// Use transaction to ensure that both data were inserted
 		$sleds_production_database -> begin_transaction();
 		$sleds_database -> begin_transaction();
+
+		$light_id = 0;
 
 		try
 		{
@@ -86,9 +102,11 @@ function insert_new_board( $board_code, $user_id )
 			$statement -> execute();
 
 			// Insert the light to the user first cluster
-			$statement = $sleds_database -> prepare( "INSERT INTO `light`( `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES ( ?, 'New Light', ?, 0, 0 )" );
-			$statement -> bind_param( "ii", $board[ "id" ], $first_cluster_id );
+			$statement = $sleds_database -> prepare( "INSERT INTO `light`( `id_board`, `name`, `id_cluster`, `id_animation`, `id_sub_playlist`) VALUES ( ?, 'New Light', ?, ?, ? )" );
+			$statement -> bind_param( "iiii", $board[ "id" ], $first_cluster_id, $first_animation_id, $first_sub_playlist_id );
 			$statement -> execute();
+
+			$light_id = $statement -> insert_id;
 
 			// If no excpetion was thrown everything went fine
 			// Commit
@@ -97,22 +115,28 @@ function insert_new_board( $board_code, $user_id )
 		}
 		catch ( mysqli_sql_exception $exception )
 		{
-			echo "aaaaaa";
 			// Roll back before transaction
 			$sleds_production_database -> rollback();
 			$sleds_database -> rollback();
 
-			echo "iiiiiiii";
-			//throw $exception;
+			throw $exception;
 		}
 
-		// */
+		// Check that a light was inserted
+		if ( $light_id != 0 )
+		{
+			// Go to light animation settings page
+			header( "Location: /home/light/settings.php?light_id=" . $light_id );
+			die();
+		}
+
+		// If here something went wrong
 		die();
 	}
 }
 
 // Relatation array request-code -> response-function
 $board_insert_codes = [
-	0x3001 => "insert_new_board"
+	0x3001 => "check_new_board"
 ];
 ?>

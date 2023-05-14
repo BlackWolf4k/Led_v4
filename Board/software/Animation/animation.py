@@ -16,22 +16,10 @@ from machine import Pin
 # To sleep on animation playing
 import time
 
-# For the leds
-import neopixel
-
-leds_strip = 0
+# To handle leds
+from Led import led
 
 play = 1
-
-# Initialize the leds
-def leds_init():
-	global leds_strip
-
-	# Read the config file
-	board_config = read.read_conf_file( "board.json" )
-
-	# Make the led strip
-	leds_strip = neopixel.NeoPixel( Pin( board_config[ "leds_pin" ], Pin.OUT ), board_config[ "leds_number" ] )
 
 # Ask an animation to the server
 # ARGUMENTS ( none )
@@ -62,10 +50,14 @@ def get_animation():
 #	-2: interrupted
 def play_animation( animation ):
 	global play
-	global leds_strip
+
+	# Clear the strip
+	led.clear_strip()
 
 	# Change the play global variable
 	play = 1
+
+	print( animation )
 
 	# Check that the server isn't interrupting
 	while ( play or animation[ "descriptor" ][ "repeat" ] > 0 ):
@@ -82,40 +74,21 @@ def play_animation( animation ):
 				print( "Phase: " + str( i ) + ", Led: " + str( j ) + ", Color: [" + str( animation[ "body" ][ i ][ j ][ 0 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 1 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 2 ] ) + "]" )
 				
 				# Change phiscal colors
-				leds_strip[ j ] = animation[ "body" ][ i ][ j ]
+				led.change_led_color( j, animation[ "body" ][ i ][ j ] )
 		
-		# Display the strip
-		leds_strip.write()
+			# Display the strip
+			led.apply_changes()
 
-		# Delay
-		time.sleep( animation[ "delay" ] )
+			# Turn off the play led
+			led.led_off( led.play_led )
+
+			# Delay
+			time.sleep( animation[ "descriptor" ][ "delay" ] / 1000 )
+
+			# Turn on the play led
+			led.led_on( led.play_led )
 
 	# Playing ended
-
-	# Change the global variable
-	play = 0
-
-def play_animation_mock( animation ):
-	global play
-
-	# Change the play global variable
-	play = 1
-
-	# Check that the server isn't interrupting
-	while ( play or animation[ "descriptor" ][ "repeat" ] > 0 ):
-		# Check that the animation is not a loop
-		if ( not ( animation[ "descriptor" ][ "repeat" ] == 255 ) ):
-			# Descrease the repetitions
-			animation[ "descriptor" ][ "repeat" ] -= 1
-		
-		# Play all the phases
-		for i in range( 0, animation[ "descriptor" ][ "phases" ], 1 ):
-			# Play a single phase
-			for j in range( 0, animation[ "descriptor" ][ "leds" ], 1 ):
-				# Print the colors of the leds
-				print( "Phase: " + str( i ) + ", Led: " + str( j ) + ", Color: [" + str( animation[ "body" ][ i ][ j ][ 0 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 1 ] ) + ", " + str( animation[ "body" ][ i ][ j ][ 2 ] ) + "]" )
-	# Playing ended
-
 	# Change the global variable
 	play = 0
 

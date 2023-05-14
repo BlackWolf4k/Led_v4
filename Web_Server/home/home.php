@@ -45,7 +45,7 @@
 				<a href="">Shop</a>
 				<a href="">About us</a>
 				<a href="">Support</a>
-				<a href="/sign/signin.php">Sign</a>
+				<a href="/home/profile/settings.php">Settings</a>
 			</nav>
 		</div>
 	</header>

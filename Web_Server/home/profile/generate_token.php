@@ -5,7 +5,7 @@
 	function generate_token()
 	{
 		// Connect to the database
-		include "../connection/sleds_connect.php";
+		include "../../connection/sleds_connect.php";
 
 		$token = "";
 		$statement = "";

@@ -63,6 +63,10 @@ if ( $_POST[ "action" ] == 1 ) // Changing the username or the password
 	$statement = $sleds_database -> prepare( "UPDATE user SET username=?, email=? WHERE id=?" );
 	$statement -> bind_param( "ssi", $_POST[ "username" ], $_POST[ "email" ], $_SESSION[ "user_id" ] );
 	$statement -> execute();
+
+	// Go back to settings page
+	header( "Location: /home/profile/settings.php" );
+	die();
 }
 else if ( $_POST[ "action" ] == 2 ) // Changing the password
 {
@@ -94,12 +98,20 @@ else if ( $_POST[ "action" ] == 2 ) // Changing the password
 	$new_password = password_hash( $_POST[ "new_password" ], PASSWORD_BCRYPT );
 	$statement -> bind_param( "sis", $new_password, $_SESSION[ "user_id" ], $old_password );
 	$statement -> execute();
+
+	// Go back to settings page
+	header( "Location: /home/profile/settings.php" );
+	die();
 }
 else if ( $_POST[ "action" ] == 3 ) // Changing the token
 {
 	include ( "./generate_token.php" );
 
 	// Generate the new token
-	$_POST[ "token" ] = generate_token();
+	generate_token();
+
+	// Go back to settings page
+	header( "Location: /home/profile/settings.php" );
+	die();
 }
 ?>

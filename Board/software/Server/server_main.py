@@ -22,6 +22,9 @@ from Animation import animation
 # To handle json
 import json
 
+# For led debug
+from Led import led
+
 socket_descriptor = 0
 
 # Spacial characters in the url of a HTTP request
@@ -69,6 +72,9 @@ def init():
 def main():
 	global socket_descriptor
 
+	# Start the play led to the that the server is reciving
+	led.led_on( led.play_led )
+
 	# Keep listening for connections
 	while True:
 		# Start connection
@@ -78,6 +84,9 @@ def main():
 			client_connection, address = socket_descriptor.accept()
 			print( "A Client Connected" )
 
+			# Turn on the idle led to tell that the server is responding
+			led.led_on( led.idle_led )
+
 			# Recive the request
 			request = client_connection.recv( 1024 )
 
@@ -86,6 +95,8 @@ def main():
 
 			# Analize the request
 			analyzed_request = analize_request( request )
+
+			print( analyzed_request )
 
 			# Check if broadcast message
 			if ( analyzed_request[ "broadcast" ] == 1 ):
@@ -98,6 +109,8 @@ def main():
 				# Get the content of the page
 				response = interpreter.interpreter( analyzed_request[ "filename" ] )
 
+				print( response )
+
 				# Send html response header
 				client_connection.send( "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" )
 
@@ -106,11 +119,17 @@ def main():
 
 				# Close the connection
 				client_connection.close()
+			
+			# Turn off the idle led
+			led.led_off( led.idle_led )
 
 		except OSError as error: # Except a error
 			# Close the connection with the client
 			client_connection.close()
 			print( "Error" )
+
+			# Turn the leds in error mode
+			led.error()
 
 # Decide what to respond to a request
 # ARGUMENTS ( string ):
@@ -318,6 +337,7 @@ def broadcast( parameters ):
 # RETURN ()
 def update_config( parameters ):
 	print( "Update" )
+	print( parameters )
 
 	# Check the values passed
 
@@ -325,15 +345,15 @@ def update_config( parameters ):
 	changed_keys = update.update_config_file( "board.json", parameters )
 
 	# Sync the new config with the main server
-	board_server_send_sync()
+	# board_server_send_sync()
 
 	# If he animation has changed require it
-	if "actual_animation" in changed_keys:
-		requests.board_server_specific_animation()
+	# if "actual_animation" in changed_keys:
+	# 	requests.board_server_specific_animation()
 
 	# If the default animation has changed require it
-	if "remote_animation" in changed_keys:
-		animation.set_default_animation( requests.board_server_specific_animation( True ) )
+	# if "remote_animation" in changed_keys:
+	# 	animation.set_default_animation( requests.board_server_specific_animation( True ) )
 
 	# Return the index page
 	return "index.html"
@@ -347,7 +367,7 @@ def update_token( paramters ):
 	update.update_config_file( "board.json", parameters )
 
 	# Return the token changing page
-	return "token_page.html"
+	return "token.html"
 
 # Conatins the function that a specific request code has to execute
 codes = { "2": broadcast, "7": update_config, "8": update_token }

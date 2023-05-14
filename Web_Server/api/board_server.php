@@ -436,8 +436,6 @@
 			$board_config = $result -> fetch_assoc();
 			echo json_encode( $board_config );
 
-			echo ",";
-
 			to_notify();
 
 			echo "]}";
@@ -466,7 +464,11 @@
 		$result = $statement -> get_result();
 
 		if ( mysqli_num_rows( $result ) <= 0 )
+		{
+			// Print a empty json
+			echo "{}";
 			return;
+		}
 
 		// Print the json
 		echo '{ "Asking": [';

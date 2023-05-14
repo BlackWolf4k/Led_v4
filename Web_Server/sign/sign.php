@@ -201,28 +201,16 @@
 		// Set the session user id
 		$_SESSION[ "user_id" ] = $result[ "id" ];
 
-		// Check if inserting a new board
-		if ( isset( $_POST[ "insert_board" ] ) )
+		// Check if the "insert_board" is setted
+		if ( isset( $_SESSION[ "insert_board" ] ) ) // The user was trying to insert a board but was not logged in
 		{
-			$this_server_url = "127.0.0.1:81";
+			// Redirect the user to the api page to add the board
+			header( "Location: /?code=12289&insert_board=" . $_SESSION[ "insert_board" ] );
 
-			// Get the token of the user
-			$statement = $sleds_database -> prepare( "SELECT token FROM user WHERE id=?" );
-			$statement -> bind_param( "i", $_SESSION[ "user_id" ] );
-			$statement -> execute();
-			$user_token = ( ( $statement -> get_result() ) -> fetch_assoc() )[ "token" ];
+			// Remove the session value
+			unset( $_SESSION[ "insert_board" ] );
 
-			// Call the insert board api
-			$curl = curl_init();
-
-			$url = sprintf( "http://%s/?code=%s&insert_board=%s&token=%s", $this_server_url, "8197", $_GET[ "insert_board" ], $user_token );
-
-			curl_setopt( $curl, CURLOPT_URL, $url );
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-			$result = curl_exec( $curl );
-
-			$result = json_decode( $result, true );
+			die();
 		}
 
 		// Go to the home page

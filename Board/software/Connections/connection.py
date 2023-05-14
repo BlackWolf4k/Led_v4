@@ -4,6 +4,9 @@ import network
 # To read config file
 from File import read
 
+# To sleep during connection
+import time
+
 # Create a global variable to store the wlan
 wlan = 0
 
@@ -53,3 +56,29 @@ def scan():
 
 	# Scan for networks and return the result
 	return wlan.scan()
+
+def try_secure_connection():
+	global wlan
+
+	connection_status = 0
+
+	# 10 should be enough
+	times = 20
+
+	# Try to connect 10 times
+	while ( connection_status == 0 and times > 0 ):
+		# Connect to the wifi
+		connection_status = connect()
+
+		print( wlan.ifconfig() )
+
+		# Sleep some time to be sure that there are more connection attempts
+		time.sleep( 0.5 )
+
+		times = times - 1
+	
+	# Check if connected
+	if ( connection_status == 0 ): # Not yet connected
+		return False
+
+	return True

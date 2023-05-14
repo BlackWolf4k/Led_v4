@@ -18,24 +18,40 @@
 			die();
 		}
 
+		// Check that the code is rapresenting any request
+		if ( !is_in_array( $_GET[ "code" ], $board_server_codes ) && !is_in_array( $_GET[ "code" ], $general_codes ) && !is_in_array( $_GET[ "code" ], $board_insert_codes ) ) // Code is wrong
+		{
+			// Return error json
+			echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
+			die();
+		}
+
 		if ( !isset( $_GET[ "token" ] ) )
 		{
 			// Check if trying to insert a board
-			if ()
+			if ( isset( $_GET[ "insert_board" ] ) && is_in_array( $_GET[ "code" ], $board_insert_codes ) )
+			{
+				session_start();
+
+				// A user is trying to add a new animation
+				// Check if signed in
+				if ( isset( $_SESSION[ "user_id" ] ) )
+				{
+					// Call the function to add the board
+					$board_insert_codes[ $_GET[ "code" ] ]( $_GET[ "insert_board" ], $_SESSION[ "user_id" ] );
+				}
+				else
+				{
+					// Redirect the user to the login page
+					header( "Location: /sign/signin.php?insert_board=" . $_GET[ "insert_board" ] ); // transmit the id of the board so that after login the user will be retrasmitted here
+				}
+			}
 			else // Exit
 			{
 				// Return error json
 				echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
 				die();
 			}
-		}
-
-		// Check that the code is rapresenting any request
-		if ( !is_in_array( $_GET[ "code" ], $board_server_codes ) && !is_in_array( $_GET[ "code" ], $general_codes ) && !is_in_array( $_GET[ "code" ], $board_insert_codes ) ) // Code is wrong
-		{
-			// Return error json
-			echo '{ "Error": "Invalid Code" }';
-			die();
 		}
 
 		// Connect to the database
@@ -57,27 +73,6 @@
 
 		// Get the user that is making the request
 		$user = $result -> fetch_assoc();
-
-		// Check if inserting a new board
-		if ( is_in_array( $_GET[ "code" ], $board_insert_codes ) )
-		{
-			// Check that the board code is passed
-			if ( isset( $_GET[ "insert_board" ] ) ) // Is passed by get
-			{
-				// Call the function to insert the board
-				$board_insert_codes[ $_GET[ "code" ] ]( $_GET[ "insert_board" ], $user[ "id" ] );
-			}
-			/*else if ( isset( $_SESSION[ "insert_board" ] ) ) // Or by session
-			{
-				// Call the function to insert the board
-				$board_insert_codes[ $_GET[ "code" ] ]( $_SESSION[ "insert_board" ] );
-			}*/
-			else // Nothing passed
-			{
-				echo '{ "Error": "Invalid Code" }';
-				die();
-			}
-		}
 
 		// Check if a general request
 		if ( is_in_array( $_GET[ "code" ], $general_codes ) )

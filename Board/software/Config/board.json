@@ -1,9 +1,13 @@
 {
-	"board_id": 1,
+	"board_id": 3,
+	"board_name": "Prototype",
 	"leds_number": 10,
 	"broadcast_port": 1233,
 	"leds_pin": 1,
-	"token": "e7f361164e28f51e24cec1bd7650886c1e8dbaeb",
+	"playing_pin": 20,
+	"idle_pin": 17,
+	"button_pin": 28,
+	"token": "605119cacf096e32e33bd5994d06dbac1e71256a",
 	"actual_animation": "Rainbow",
 	"remote_animation": "Purple"
 }

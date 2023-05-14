@@ -2,6 +2,7 @@
 # Upload the files to the board
 echo "Uploading Animation Module..."
 ampy -p /dev/ttyACM0 put Animation
+echo "Uploading Client Module..."
 ampy -p /dev/ttyACM0 put Client
 echo "Uploading Comunication Module..."
 ampy -p /dev/ttyACM0 put Comunication
@@ -11,6 +12,8 @@ echo "Uploading File Module..."
 ampy -p /dev/ttyACM0 put File
 echo "Uploading Led Module..."
 ampy -p /dev/ttyACM0 put Led
+echo "Uploading Button Module..."
+ampy -p /dev/ttyACM0 put Button
 echo "Uploading Server Module..."
 ampy -p /dev/ttyACM0 put Server
 echo "Uploading Services Module..."
