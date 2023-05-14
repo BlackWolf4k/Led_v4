@@ -28,7 +28,7 @@ if ( isset( $_GET[ "is_username_already_in_use" ] ) )
 if ( isset( $_GET[ "is_email_already_in_use" ] ) )
 {
 	// Check if an email
-	if ( !filter_var( $_POST[ "email" ], FILTER_VALIDATE_EMAIL ) ) // If not an email return the "used" flag ( true )
+	if ( !filter_var( $_GET[ "is_email_already_in_use" ], FILTER_VALIDATE_EMAIL ) ) // If not an email return the "used" flag ( true )
 	{
 		echo "true";
 		die();

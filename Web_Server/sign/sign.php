@@ -2,6 +2,21 @@
 	// session_save_path( "/var/www/sessions" ); // remove this in other servers
 	session_start();
 
+	$default = [
+		"group" => [
+			"name" => "Home"
+		],
+		"animation" => [
+			"id_patter" => 1,
+			"name" => "Default",
+			"leds_number" => 999,
+			"phases" => 10,
+			"delay" => 1000,
+			"repeat" => 255,
+			"file_name" => "default_animation.dat"
+		]
+	];
+
 	// Check that hidden value is present
 	if ( !isset( $_POST[ "signup" ] ) ) // Hidden value not setted
 	{
@@ -35,7 +50,7 @@
 		// Check if really an email
 		if ( !filter_var( $_POST[ "email" ], FILTER_VALIDATE_EMAIL ) )
 		{
-			header( "Location: ./settings.php?error=0" );
+			header( "Location: ./signup.php?error=0" );
 			die();
 		}
 
@@ -65,6 +80,10 @@
 			die();
 		}
 
+		// Create a directory for the user
+		if ( !file_exists( "../users/" . $_POST[ "username" ] )  ) // Before check if the folder does not already exist
+			mkdir( "../users/" . $_POST[ "username" ], 0777, true );
+
 		// Use transactions to ensure operation success
 		$sleds_database -> begin_transaction();
 
@@ -79,8 +98,8 @@
 			$user_id = $statement -> insert_id;
 
 			// Create a default group for the user
-			$statement = $sleds_database -> prepare( "INSERT INTO cluster ( name ) VALUES ( 'Home' )" ); // Every default group has as name 'Home'
-			// $statement -> bind_param( "", );
+			$statement = $sleds_database -> prepare( "INSERT INTO cluster ( name ) VALUES ( ? )" ); // Every default group has as name 'Home'
+			$statement -> bind_param( "s", $default[ "group" ][ "name" ] );
 			$statement -> execute();
 
 			$group_id = $statement -> insert_id;
@@ -95,9 +114,32 @@
 			$statement -> bind_param( "si", $_POST[ "username" ], $group_id );
 			$statement -> execute();
 
+			$playlist_id = $statement -> insert_id;
+
+			// Create a subplaylist for the user
+			$statement = $sleds_database -> prepare( "INSERT INTO sub_playlist ( name, id_playlist ) VALUES ( ?, ? )" );
+			$statement -> bind_param( "si", $_POST[ "username" ], $playlist_id );
+			$statement -> execute();
+
+			$sub_playlist_id = $statement -> insert_id;
+
 			// Insert a default animation
-			$statement = $sleds_database -> prepare( "INSERT INTO user ( email, username, password ) VALUES ( ?, ?, ? )" );
-			$statement -> bind_param( "sss", $_POST[ "email" ], $_POST[ "username" ], $password );
+			$statement = $sleds_database -> prepare( "INSERT INTO `animation`( `id_pattern`, `id_playlist`, `name`, `leds_number`, `phases`, `delay`, `repeat`, `file_name` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )" );
+			$statement -> bind_param( "iisiiiis", $default[ "animation" ][ "id_patter" ],
+												  $playlist_id,
+												  $default[ "animation" ][ "name" ],
+												  $default[ "animation" ][ "leds_number" ],
+												  $default[ "animation" ][ "phases" ],
+												  $default[ "animation" ][ "delay" ],
+												  $default[ "animation" ][ "repeat" ],
+												  $default[ "animation" ][ "file_name" ] );
+			$statement -> execute();
+
+			$animation_id = $statement -> insert_id;
+
+			// Relationate the default animation with the default sub playlist
+			$statement = $sleds_database -> prepare( "INSERT INTO relation_animation_sub_playlist ( id_animation, id_sub_playlist ) VALUES ( ?, ? )" );
+			$statement -> bind_param( "si", $animation_id, $sub_playlist_id );
 			$statement -> execute();
 
 			// If arrived here everything went fine
@@ -109,13 +151,13 @@
 			$sleds_database -> roolback();
 
 			throw $exception;
+
+			// Go to the sign up page
+			header( "Location: /sign/signup.php" );
+			die();
 		}
 
-		// Create a directory for the user
-		if ( !file_exists( "../users/" . $_POST[ "username" ] )  ) // Before check if the folder does not already exist
-			mkdir( "../users/" . $_POST[ "username" ], 0777, true );
-
-		// Redirect to login page
+		// // Redirect to login page
 		header( "Location: ./signin.php" );
 		die();
 	}

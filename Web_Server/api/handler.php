@@ -10,12 +10,24 @@
 		include "general.php";
 		include "board_insert.php";
 
-		// Check the values of the request
-		if ( !isset( $_GET[ "code" ] ) || !isset( $_GET[ "token" ] ) )
+		// Check the code of the request
+		// There must always be a code
+		if ( !isset( $_GET[ "code" ] ) )
 		{
-			echo '{ "Error": "Invalid Code or Token" }';
-			// Not all values needed are found
+			echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
 			die();
+		}
+
+		if ( !isset( $_GET[ "token" ] ) )
+		{
+			// Check if trying to insert a board
+			if ()
+			else // Exit
+			{
+				// Return error json
+				echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
+				die();
+			}
 		}
 
 		// Check that the code is rapresenting any request
@@ -39,7 +51,7 @@
 		if ( mysqli_num_rows( $result ) <= 0 ) // Token is wrong
 		{
 			// Return error json
-			echo '{ "Error": "Invalid Token" }';
+			echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
 			die();
 		}
 
@@ -85,7 +97,7 @@
 		if ( mysqli_num_rows( $board_result ) <= 0 ) // No board found
 		{
 			// Return error json
-			echo '{ "Error": "Invalid Code or Token" }';
+			echo '{ "Error": "Invalid Code or Token" }'; // never tell if the token is incorrect
 			die();
 		}
 

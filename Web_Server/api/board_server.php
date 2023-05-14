@@ -32,7 +32,7 @@
 		$result = $statement -> get_result();
 
 		// Check if there was output
-		if ( mysqli_num_rows( $result ) <= 0 ) // The biard was not found
+		if ( mysqli_num_rows( $result ) <= 0 ) // The board was not found
 		{
 			// Return error code
 			echo "{}";

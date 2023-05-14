@@ -3,7 +3,7 @@ button
 	border-style: none;
 }
 
-.lights_tables
+.lights_tables, .album_tables
 {
 	padding-top: 5%;
 	padding-left: 3%;

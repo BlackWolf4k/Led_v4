@@ -23,7 +23,7 @@
 		include "../connection/sleds_connect.php";
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<link rel = "shortcut icon" href = "/sleds_favicon.ico" type = "image/x-icon" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -40,11 +40,12 @@
 			<nav>
 				<a href="/home/home.php">Home</a>
 				<a href="/home/animation_editor/home.php">Editor</a>
+				<a href="/home/animation_album.php">Albums</a>
+				<a href="/home/animation_playlist.php">Playlists</a>
 				<a href="">Shop</a>
-				<a href="">Other</a>
 				<a href="">About us</a>
 				<a href="">Support</a>
-				<a href="./sign/signin.php">Sign</a>
+				<a href="/sign/signin.php">Sign</a>
 			</nav>
 		</div>
 	</header>

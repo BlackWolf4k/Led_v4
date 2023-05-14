@@ -29,8 +29,9 @@
 			<nav>
 				<a href="/home/home.php">Home</a>
 				<a href="/home/animation_editor/home.php">Editor</a>
+				<a href="/home/animation_album.php">Albums</a>
+				<a href="/home/animation_playlist.php">Playlists</a>
 				<a href="">Shop</a>
-				<a href="">Other</a>
 				<a href="">About us</a>
 				<a href="">Support</a>
 				<a href="./sign/signin.php">Sign</a>
@@ -84,7 +85,7 @@
 		</div>
 	</body>
 </html>
-<!--<html>
+<!--<html lang="en">
 	<head>
 		<link rel = "shortcut icon" href = "../sleds_favicon.ico" type = "image/x-icon" />
 	</head>
