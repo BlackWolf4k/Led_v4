@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+if ( isset( $_GET[ "insert_board" ] ) )
+	$_SESSION[ "insert_board" ] = $_GET[ "insert_board" ];
+?>
 <!DOCTYPE html>
 <html>
 <head>

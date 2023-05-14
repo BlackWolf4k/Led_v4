@@ -8,6 +8,7 @@
 		// Include the responses files
 		include "board_server.php";
 		include "general.php";
+		include "board_insert.php";
 
 		// Check the values of the request
 		if ( !isset( $_GET[ "code" ] ) || !isset( $_GET[ "token" ] ) )
@@ -18,7 +19,7 @@
 		}
 
 		// Check that the code is rapresenting any request
-		if ( !is_in_array( $_GET[ "code" ], $board_server_codes ) && !is_in_array( $_GET[ "code" ], $general_codes ) ) // Code is wrong
+		if ( !is_in_array( $_GET[ "code" ], $board_server_codes ) && !is_in_array( $_GET[ "code" ], $general_codes ) && !is_in_array( $_GET[ "code" ], $board_insert_codes ) ) // Code is wrong
 		{
 			// Return error json
 			echo '{ "Error": "Invalid Code" }';
@@ -44,6 +45,27 @@
 
 		// Get the user that is making the request
 		$user = $result -> fetch_assoc();
+
+		// Check if inserting a new board
+		if ( is_in_array( $_GET[ "code" ], $board_insert_codes ) )
+		{
+			// Check that the board code is passed
+			if ( isset( $_GET[ "insert_board" ] ) ) // Is passed by get
+			{
+				// Call the function to insert the board
+				$board_insert_codes[ $_GET[ "code" ] ]( $_GET[ "insert_board" ], $user[ "id" ] );
+			}
+			/*else if ( isset( $_SESSION[ "insert_board" ] ) ) // Or by session
+			{
+				// Call the function to insert the board
+				$board_insert_codes[ $_GET[ "code" ] ]( $_SESSION[ "insert_board" ] );
+			}*/
+			else // Nothing passed
+			{
+				echo '{ "Error": "Invalid Code" }';
+				die();
+			}
+		}
 
 		// Check if a general request
 		if ( is_in_array( $_GET[ "code" ], $general_codes ) )

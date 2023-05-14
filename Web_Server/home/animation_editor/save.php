@@ -10,10 +10,10 @@ if ( !isset( $_SESSION[ "user_id" ] ) ) // Check if signed in
 	die();
 }
 
-if ( isset( $_POST[ "animation" ] ) )
+if ( !isset( $_POST[ "animation" ] ) )
 {
 	// Go to the animation creation page
-	header( "Location: ./home.php" );
+	header( "Location: ./home.php?error=1" );
 	die();
 }
 else

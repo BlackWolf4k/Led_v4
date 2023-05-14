@@ -31,7 +31,7 @@
 				<a href="/home/animation_editor/home.php">Editor</a>
 				<a href="">Shop</a>
 				<a href="">Other</a>
-				<a href="">Ebout us</a>
+				<a href="">About us</a>
 				<a href="">Support</a>
 				<a href="./sign/signin.php">Sign</a>
 			</nav>

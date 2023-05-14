@@ -1,12 +1,12 @@
 <?php
 	// Connects to the database
-	$user_name = "sleds";
-	$server_name = "127.0.0.1";
-	$password = "sleds";
-	$database_name = "sleds";
+	$sleds_user_name = "sleds";
+	$sleds_server_name = "127.0.0.1";
+	$sleds_password = "sleds";
+	$sleds_database_name = "sleds";
 
 	// Connect to the database
-	$sleds_database = new mysqli( $server_name, $user_name, $password, $database_name );
+	$sleds_database = new mysqli( $sleds_server_name, $sleds_user_name, $sleds_password, $sleds_database_name );
 
 	// Check that the connection was sucessfull
 	if ( $sleds_database -> connect_error )

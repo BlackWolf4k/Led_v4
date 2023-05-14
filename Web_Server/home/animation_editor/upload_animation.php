@@ -28,6 +28,9 @@
 	// Decode the animation json as associative array
 	$animation = json_decode( $_SESSION[ "animation" ], true );
 
+	// Store the name in the json
+	$animation[ "descriptor" ][ "name" ] = $_POST[ "animation_name" ];
+
 	// Delete the animation from the session
 	unset( $_SESSION[ "animation" ] );
 
@@ -71,8 +74,8 @@
 	file_put_contents( $animation_filename, $binary_animation );
 
 	// Get the animation playlist
-	$statement = $sleds_database -> prepare( "SELECT playlist.id FROM playlist JOIN relation_user_cluster ON playlist.id_cluster=relation_user_cluster.id_cluster WHERE relation_user_cluster.id_user=?" );
-	$statement -> bind_param( "i", $_SESSION[ "user_id" ] );
+	$statement = $sleds_database -> prepare( "SELECT sub_playlist.id_playlist FROM sub_playlist WHERE sub_playlist.id=?" );
+	$statement -> bind_param( "i", $_POST[ "animation_sub_playlist" ] );
 	$statement -> execute();
 	$result = $statement -> get_result();
 
@@ -86,20 +89,48 @@
 	$result = $result -> fetch_assoc();
 
 	// Store the id of the playlist
-	$id_playlist = $result[ "id" ];
+	$id_playlist = $result[ "id_playlist" ];
 
-	// Store the animation
-	$statement = $sleds_database -> prepare( "INSERT INTO `animation` ( `id_pattern`, `id_playlist`, `name`, `leds_number`, `phases`, `delay`, `repeat`, `file_name` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )" );
-	$statement -> bind_param( "iisiiiis", $animation[ "descriptor" ][ "pattern" ],
-										  $id_playlist,
-										  $animation[ "descriptor" ][ "name" ],
-										  $animation[ "descriptor" ][ "pixels" ],
-										  $animation[ "descriptor" ][ "phases" ],
-										  $animation[ "descriptor" ][ "delay" ],
-										  $animation[ "descriptor" ][ "repetitions" ],
-										  $animation_file_location );
-	$statement -> execute();
-	$result = $statement -> get_result();
+	// Use transaction to ensure that both data were inserted
+	$sleds_database -> begin_transaction();
+
+	try
+	{
+		// Store the animation
+		$statement = $sleds_database -> prepare( "INSERT INTO `animation` ( `id_pattern`, `id_playlist`, `name`, `leds_number`, `phases`, `delay`, `repeat`, `file_name` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )" );
+		$statement -> bind_param( "iisiiiis", $animation[ "descriptor" ][ "pattern" ],
+											  $id_playlist,
+											  $animation[ "descriptor" ][ "name" ],
+											  $animation[ "descriptor" ][ "pixels" ],
+											  $animation[ "descriptor" ][ "phases" ],
+											  $animation[ "descriptor" ][ "delay" ],
+											  $animation[ "descriptor" ][ "repetitions" ],
+											  $animation_file_location );
+		$statement -> execute();
+
+		// Get the id of the animation just inserted
+		$inserted_animation_id = $statement -> insert_id;
+
+		// Insert the animation in the sub playlist
+		$statement = $sleds_database -> prepare( "INSERT INTO `relation_animation_sub_playlist` ( `id_animation`, `id_sub_playlist` ) VALUES ( ?, ? )" );
+		$statement -> bind_param( "ii", $inserted_animation_id, $_POST[ "animation_sub_playlist" ] );
+		$statement -> execute();
+
+		// If no excpetion was thrown everything went fine
+		// Commit
+		$sleds_database -> commit();
+	}
+	catch ( mysqli_sql_exception $exception )
+	{
+		// Roll back before transaction
+		$sleds_database -> rollback();
+
+		throw $exception;
+	}
+
+	// Everything was fine
+	header( "Location: /home/home.php" );
+	die();
 
 	// Check an animation json
 	// Returns to the home page of animation editor in case of error reporting the error value

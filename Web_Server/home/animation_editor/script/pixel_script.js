@@ -237,7 +237,7 @@ function play()
 function save_animation()
 {
 	document.getElementById( "animation_body_post" ).value = JSON.stringify( data );
-	// document.cookie = "animation" + JSON.stringify( data );
+	// document.cookie = "animation=" + JSON.stringify( data );
 }
 
 /*UTILITY*/

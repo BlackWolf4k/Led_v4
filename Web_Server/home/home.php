@@ -29,10 +29,26 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 		<link rel = "stylesheet" href = "./style/style.css" >
+		<link rel = "stylesheet" href = "../style/style_navbar.css" >
 		<script src="./script/home.js"></script>
 	</head>
 	<body>
-	<nav class="navbar navbar-dark bg-dark">
+	<header>
+		<div class="container">
+			<!--<i id="logo" class="fa fa-apple" aria-hidden="true"></i>-->
+			<img id = "logo" src = "/home/images/pixel.png" >
+			<nav>
+				<a href="/home/home.php">Home</a>
+				<a href="/home/animation_editor/home.php">Editor</a>
+				<a href="">Shop</a>
+				<a href="">Other</a>
+				<a href="">About us</a>
+				<a href="">Support</a>
+				<a href="./sign/signin.php">Sign</a>
+			</nav>
+		</div>
+	</header>
+	<!--<nav class="navbar navbar-dark bg-dark">
 		<div>
 			<a href = "./animation_editor/home.php"><img src = "./images/pixel.png"/></a>
 		</div>
@@ -48,7 +64,7 @@
 				<button type="submit">New Token</button>
 			</form>
 		</div>
-	</nav>
+	</nav>-->
 	<div class = "lights_tables" >
 		<?php
 		// Get all the groups of the user
