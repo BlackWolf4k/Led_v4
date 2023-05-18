@@ -96,3 +96,10 @@ def play_animation( animation ):
 def set_default_animation( animation ):
 	# Store the animation
 	write.write_default_animation( animation )
+
+def play_default_animation():
+	# Get the default animation
+	animation = read.read_default_animation()
+
+	# Play the animation
+	play_animation( animation[ "Content" ][ 0 ] )

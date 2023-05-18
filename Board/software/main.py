@@ -84,9 +84,9 @@ if __name__ == "__main__":
 
 		# Check if realy connected
 		if ( connection_status == 0 ): # Not realy connected
-			# Play offline animation
-			print( "Play offline" )
-			# animation.set_default_animation()
+			# Play offline animation forever
+			while True:
+				animation.play_default_animation()
 		else:
 			# Play animations in loop
 			while True:

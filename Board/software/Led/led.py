@@ -67,7 +67,7 @@ def change_led_color( led, color ):
 	global leds_strip
 
 	# Check the values
-	if ( led < 0 or len( color ) != 3 or led > len( leds_strip ) ): # The values are wrong
+	if ( led < 0 or len( color ) != 3 or led >= len( leds_strip ) ): # The values are wrong
 		return 0 # Return error code
 	
 	# Change the colors

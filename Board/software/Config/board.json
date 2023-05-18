@@ -1,7 +1,7 @@
 {
 	"board_id": 3,
 	"board_name": "Prototype",
-	"leds_number": 10,
+	"leds_number": 80,
 	"broadcast_port": 1233,
 	"leds_pin": 1,
 	"playing_pin": 20,

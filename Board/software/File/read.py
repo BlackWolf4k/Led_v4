@@ -48,6 +48,25 @@ def read_conf_file( filename ):
 	# Return the json
 	return content
 
+# Read the default animation file
+def read_default_animation():
+	file = 0
+
+	# Open the file
+	try:
+		file = open( "/Animation/" + "default_animation.json", "r" ) # Check this
+	except: # No file found
+		return 0
+
+	# Read the json
+	content = json.load( file )
+
+	# Close the file
+	file.close()
+
+	# Return the json
+	return content
+
 # List all the files in a directory
 # ARGUMENTS ( string ):
 #	-path: the directory absolute path
